@@ -9,7 +9,10 @@ func runServer(port string) {
 	var hand *Handler = &Handler{Name: "Handy"}
 	http.Handle("/", hand)
 	fmt.Println("Start")
-	http.ListenAndServe(port, hand)
+	err := http.ListenAndServe(port, hand)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {

@@ -3,6 +3,7 @@ package parsers
 import (
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -29,7 +30,15 @@ func (vkp *VKParser) GetLink() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer page.Body.Close()
+
+	// Trying to close the response.
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(page.Body)
+
 	if page.StatusCode == 404 {
 		return "", errors.New("page not found")
 	} else if page.StatusCode != 200 {
