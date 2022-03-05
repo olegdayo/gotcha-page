@@ -1,4 +1,4 @@
-package parsers
+package requesters
 
 import (
 	"errors"
@@ -7,24 +7,24 @@ import (
 	"net/http"
 )
 
-type VKParser struct {
+type VKRequester struct {
 	Name     string
 	nickname string
 }
 
-func NewVKParser(nickname string) *VKParser {
-	vkp := new(VKParser)
-	vkp.Name = "VK"
-	vkp.nickname = nickname
-	return vkp
+func NewVKRequester(nickname string) *VKRequester {
+	vkr := new(VKRequester)
+	vkr.Name = "VK"
+	vkr.nickname = nickname
+	return vkr
 }
 
-func (vkp *VKParser) GetName() string {
-	return vkp.Name
+func (vkr *VKRequester) GetName() string {
+	return vkr.Name
 }
 
-func (vkp *VKParser) GetLink() (string, error) {
-	var link string = "https://vk.com/" + vkp.nickname
+func (vkr *VKRequester) GetLink() (string, error) {
+	var link string = "https://vk.com/" + vkr.nickname
 
 	page, err := http.Get(link)
 	if err != nil {
