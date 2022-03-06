@@ -14,6 +14,7 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc.Requesters = []requesters.Requester{
 		requesters.NewTelegramRequester(nickname),
 		requesters.NewVKRequester(nickname),
+		requesters.NewGithubRequester(nickname),
 	}
 	return pc
 }
