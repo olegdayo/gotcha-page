@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gotchaPage/requesters"
 )
 
@@ -24,9 +25,13 @@ func (rc *RequesterContainer) GetLinks() [][2]string {
 	var link string
 	var err error
 	for _, requester := range rc.Requesters {
+		fmt.Print(requester.GetName() + ":")
 		link, err = requester.GetLink()
 		if err == nil {
+			fmt.Println(link)
 			links = append(links, [2]string{requester.GetName(), link})
+		} else {
+			fmt.Println(err)
 		}
 	}
 	return links

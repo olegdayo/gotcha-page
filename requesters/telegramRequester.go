@@ -2,13 +2,13 @@ package requesters
 
 type TelegramRequester struct {
 	Name     string
-	nickname string
+	Nickname string
 }
 
 func NewTelegramRequester(nickname string) *TelegramRequester {
 	tr := new(TelegramRequester)
 	tr.Name = "Telegram"
-	tr.nickname = nickname
+	tr.Nickname = nickname
 	return tr
 }
 

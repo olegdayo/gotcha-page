@@ -9,13 +9,13 @@ import (
 
 type GithubRequester struct {
 	Name     string
-	nickname string
+	Nickname string
 }
 
 func NewGithubRequester(nickname string) *GithubRequester {
 	gr := new(GithubRequester)
 	gr.Name = "Github"
-	gr.nickname = nickname
+	gr.Nickname = nickname
 	return gr
 }
 
@@ -24,7 +24,7 @@ func (gr *GithubRequester) GetName() string {
 }
 
 func (gr *GithubRequester) GetLink() (string, error) {
-	var link string = "https://github.com/" + gr.nickname
+	var link string = "https://github.com/" + gr.Nickname
 
 	page, err := http.Get(link)
 	if err != nil {

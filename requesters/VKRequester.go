@@ -9,13 +9,13 @@ import (
 
 type VKRequester struct {
 	Name     string
-	nickname string
+	Nickname string
 }
 
 func NewVKRequester(nickname string) *VKRequester {
 	vkr := new(VKRequester)
 	vkr.Name = "VK"
-	vkr.nickname = nickname
+	vkr.Nickname = nickname
 	return vkr
 }
 
@@ -24,7 +24,7 @@ func (vkr *VKRequester) GetName() string {
 }
 
 func (vkr *VKRequester) GetLink() (string, error) {
-	var link string = "https://vk.com/" + vkr.nickname
+	var link string = "https://vk.com/" + vkr.Nickname
 
 	page, err := http.Get(link)
 	if err != nil {
