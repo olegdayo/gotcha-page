@@ -1,0 +1,13 @@
+label {
+    align-items: center;
+    color: red;
+}
+
+input {
+    align-self: center;
+    color: aqua;
+}
+
+.form {
+    text-align: center;
+}
