@@ -6,10 +6,15 @@ import (
 )
 
 func runServer(port string) {
+	mux := http.NewServeMux()
 	var hand *Handler = &Handler{Name: "Handy"}
-	http.Handle("/", hand)
+
+	mux.Handle("/", hand)
+	mux.Handle("/assets/", http.StripPrefix("/assets/",
+		http.FileServer(http.Dir("assets"))))
+
 	fmt.Println("Start")
-	err := http.ListenAndServe(port, hand)
+	err := http.ListenAndServe(port, mux)
 	if err != nil {
 		panic(err)
 	}

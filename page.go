@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"html/template"
 	"net/http"
 )
+
+var tpl = template.Must(template.ParseFiles("page.html"))
 
 type Handler struct {
 	Name string
@@ -16,11 +18,13 @@ func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 func page(rw http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		page, err := ioutil.ReadFile("page.html")
+		//page, err := ioutil.ReadFile("page.html")
+		err := tpl.Execute(rw, nil)
 		if err != nil {
 			panic(err)
 		}
-		rw.Write(page)
+		//rw.Write(page)
+		return
 	}
 
 	r.ParseForm()
