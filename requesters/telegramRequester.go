@@ -16,7 +16,7 @@ func (tr *TelegramRequester) GetName() string {
 	return tr.Name
 }
 
-func (tr *TelegramRequester) GetLink() (string, error) {
+func (tr *TelegramRequester) GetInfo() (string, string, error) {
 	//var link string = "t.me/" + tr.nickname
-	return "", nil
+	return "", "", nil
 }

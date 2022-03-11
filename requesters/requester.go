@@ -4,6 +4,6 @@ package requesters
 type Requester interface {
 	// GetName - Getting name of the parser.
 	GetName() string
-	// GetLink - Getting link to user's profile via their nickname.
-	GetLink() (string, error)
+	// GetInfo - Getting link to user's and their name profile via their nickname.
+	GetInfo() (string, string, error)
 }

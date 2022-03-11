@@ -11,3 +11,7 @@ input {
 .form {
     text-align: center;
 }
+
+.ticks > label {
+    color: black;
+}

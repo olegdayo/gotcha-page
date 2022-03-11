@@ -3,6 +3,7 @@ package requesters
 import (
 	"errors"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"io"
 	"net/http"
 )
@@ -23,12 +24,12 @@ func (vkr *VKRequester) GetName() string {
 	return vkr.Name
 }
 
-func (vkr *VKRequester) GetLink() (string, error) {
+func (vkr *VKRequester) GetInfo() (string, string, error) {
 	var link string = "https://vk.com/" + vkr.Nickname
 
 	page, err := http.Get(link)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	// Trying to close the response.
@@ -40,10 +41,16 @@ func (vkr *VKRequester) GetLink() (string, error) {
 	}(page.Body)
 
 	if page.StatusCode == 404 {
-		return "", errors.New("page not found")
+		return "", "", errors.New("page not found")
 	} else if page.StatusCode != 200 {
-		return "", errors.New(fmt.Sprintf("Status code is %d", page.StatusCode))
+		return "", "", errors.New(fmt.Sprintf("Status code is %d", page.StatusCode))
 	}
 
-	return link, nil
+	info, err := goquery.NewDocumentFromReader(page.Body)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return link, info.Find("title").Text(), nil
 }
