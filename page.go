@@ -6,17 +6,6 @@ import (
 	"net/http"
 )
 
-var ansPage string = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>My test page</title>
-    <link rel="stylesheet" href="assets/page_style.css">
-</head>
-
-<body>
-`
-
 type Handler struct {
 	Name string
 }
@@ -32,24 +21,36 @@ func page(rw http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 		rw.Write(page)
-		return
+	} else {
+		buildAnswerPage(rw, r)
 	}
-
-	buildAnswerPage(rw, r)
 }
 
 func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
+	var ansPage string = `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<title>Answer</title>
+	<link rel="stylesheet" href="assets/answer.css">
+</head>
+	
+<body>
+<div class="links">
+`
 	fmt.Println(getUsedLinks(r))
 	for _, user := range getUsedLinks(r) {
 		if user.IsAvailable {
-			ansPage += fmt.Sprintf("<a name=\"%s\" href=\"%s\">%s: %s</a>\n<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
+			ansPage += fmt.Sprintf("\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
 		} else {
-			ansPage += fmt.Sprintf("<a name=\"%s\">%s: %s</a>\n<br/>\n", user.SocialNetwork, user.SocialNetwork, user.Link)
+			ansPage += fmt.Sprintf("\t<a name=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.SocialNetwork, user.Link)
 		}
 	}
-	ansPage += `</body>
+	ansPage += `</div>
+</body>
 </html>`
-	rw.Write([]byte(ansPage))
+	fmt.Println(ansPage)
+	fmt.Fprintf(rw, ansPage)
 }
 
 func getUsedLinks(r *http.Request) []UserInfo {
