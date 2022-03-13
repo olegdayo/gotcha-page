@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func runServer(port string) {
+func runServer(port string) error {
 	mux := http.NewServeMux()
 	var hand *Handler = &Handler{Name: "Handy"}
 
@@ -14,9 +14,13 @@ func runServer(port string) {
 		http.FileServer(http.Dir("assets"))))
 
 	log.Println("Start")
-	http.ListenAndServe(port, mux)
+	err := http.ListenAndServe(port, mux)
+	return err
 }
 
 func main() {
-	runServer(":8080")
+	err := runServer(":8080")
+	if err != nil {
+		panic(err)
+	}
 }
