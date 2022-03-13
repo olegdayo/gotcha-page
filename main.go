@@ -14,10 +14,7 @@ func runServer(port string) {
 		http.FileServer(http.Dir("assets"))))
 
 	log.Println("Start")
-	err := http.ListenAndServe(port, mux)
-	if err != nil {
-		panic(err)
-	}
+	http.ListenAndServe(port, mux)
 }
 
 func main() {
