@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"net/http"
+	"strings"
 )
 
 type SocialNetworkRequester struct {
@@ -47,5 +48,5 @@ func (snr *SocialNetworkRequester) GetInfo() (string, string, error) {
 		return "", "", err
 	}
 
-	return link, info.Find("title").Text(), nil
+	return strings.TrimSpace(link), strings.TrimSpace(info.Find("title").Text()), nil
 }

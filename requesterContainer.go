@@ -25,9 +25,10 @@ type RequesterContainer struct {
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
 	pc.Requesters = map[string]RequesterAvailability{
-		"telegram": {requesters.NewTelegramRequester(nickname), false},
-		"vk":       {requesters.NewSocialNetworkRequester("VK", "vk.com", nickname), false},
-		"github":   {requesters.NewSocialNetworkRequester("Github", "github.com", nickname), false},
+		"telegram":  {requesters.NewTelegramRequester(nickname), false},
+		"vk":        {requesters.NewSocialNetworkRequester("VK", "vk.com", nickname), false},
+		"instagram": {requesters.NewSocialNetworkRequester("Instagram", "instagram.com", nickname), false},
+		"github":    {requesters.NewSocialNetworkRequester("Github", "github.com", nickname), false},
 	}
 	return pc
 }

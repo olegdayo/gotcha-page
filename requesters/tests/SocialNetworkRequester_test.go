@@ -109,6 +109,15 @@ func TestGetInfo(t *testing.T) {
 		},
 		{
 			requesters.NewSocialNetworkRequester(
+				"instagram",
+				"instagram.com",
+				"olegsama",
+			),
+			"https://instagram.com/olegsama",
+			"Oleg (@olegsama) • Instagram photos and videos",
+		},
+		{
+			requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
 				"dmvdfcjdjk123211hj23123bhwhb1hb3j",
@@ -121,6 +130,15 @@ func TestGetInfo(t *testing.T) {
 				"Github",
 				"github.com",
 				"dm5vdfcj31djk2321151e34123214211hj2323e123sd211342bhwhb1hb3j",
+			),
+			"page not found",
+			"",
+		},
+		{
+			requesters.NewSocialNetworkRequester(
+				"instagram",
+				"instagram.com",
+				"jcsxiuaiunxiu378wbedxs78w33bd2eqw9emimads0wq9oiqwd",
 			),
 			"page not found",
 			"",
