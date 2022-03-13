@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -13,7 +13,7 @@ func runServer(port string) {
 	mux.Handle("/assets/", http.StripPrefix("/assets/",
 		http.FileServer(http.Dir("assets"))))
 
-	fmt.Println("Start")
+	log.Println("Start")
 	err := http.ListenAndServe(port, mux)
 	if err != nil {
 		panic(err)

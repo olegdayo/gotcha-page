@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -38,7 +39,7 @@ func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
 <body>
 <div class="links">
 `
-	fmt.Println(getUsedLinks(r))
+	log.Println(getUsedLinks(r))
 	for _, user := range getUsedLinks(r) {
 		if user.IsAvailable {
 			ansPage += fmt.Sprintf("\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
@@ -49,14 +50,14 @@ func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
 	ansPage += `</div>
 </body>
 </html>`
-	fmt.Println(ansPage)
+	log.Println(ansPage)
 	fmt.Fprintf(rw, ansPage)
 }
 
 func getUsedLinks(r *http.Request) []UserInfo {
 	r.ParseForm()
 	nick := r.FormValue("nickname")
-	fmt.Println(r.Form)
+	log.Println(r.Form)
 
 	container := NewRequesterContainer(nick)
 	for key, _ := range r.Form {

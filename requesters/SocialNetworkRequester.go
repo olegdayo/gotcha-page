@@ -8,24 +8,26 @@ import (
 	"net/http"
 )
 
-type GithubRequester struct {
+type SocialNetworkRequester struct {
 	Name     string
+	mainURL  string
 	Nickname string
 }
 
-func NewGithubRequester(nickname string) *GithubRequester {
-	gr := new(GithubRequester)
-	gr.Name = "Github"
-	gr.Nickname = nickname
-	return gr
+func NewSocialNetworkRequester(name string, mainURl string, nickname string) *SocialNetworkRequester {
+	snr := new(SocialNetworkRequester)
+	snr.Name = name
+	snr.mainURL = mainURl
+	snr.Nickname = nickname
+	return snr
 }
 
-func (gr *GithubRequester) GetName() string {
-	return gr.Name
+func (snr *SocialNetworkRequester) GetName() string {
+	return snr.Name
 }
 
-func (gr *GithubRequester) GetInfo() (string, string, error) {
-	var link string = "https://github.com/" + gr.Nickname
+func (snr *SocialNetworkRequester) GetInfo() (string, string, error) {
+	var link string = fmt.Sprintf("https://%s/", snr.mainURL) + snr.Nickname
 
 	page, err := http.Get(link)
 	if err != nil {
