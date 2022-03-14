@@ -1,27 +1,42 @@
 package main
 
 import (
-	"fmt"
 	"gotchaPage/requesters"
+	"log"
 )
 
+// RequesterAvailability struct which shows if we will use the requester or not.
 type RequesterAvailability struct {
+	// Requester itself.
 	requester requesters.Requester
+	// Is it available or not.
 	Available bool
 }
 
+// UserInfo is a struct with all user info.
 type UserInfo struct {
+	// Social network name.
 	SocialNetwork string
-	Link          string
-	Name          string
-	IsAvailable   bool
+	// User's profile link.
+	Link string
+	// User's name from <title> tag.
+	Name string
+	// User availability.
+	// True if everything is ok.
+	// False if during parsing an error occurred.
+	IsAvailable bool
 }
 
+// RequesterContainer is a container of requesters.
 type RequesterContainer struct {
-	nickname   string
+	// Nickname of a user we are looking for.
+	nickname string
+	// Requesters.
 	Requesters map[string]RequesterAvailability
 }
 
+// NewRequesterContainer initializes all requesters we have.
+// NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
 	pc.Requesters = map[string]RequesterAvailability{
@@ -33,20 +48,25 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 	return pc
 }
 
+// GetLinks gets all users' with given nickname info from given slice of sites.
 func (rc *RequesterContainer) GetLinks() []UserInfo {
 	var links []UserInfo
 	var link string
 	var name string
 	var err error
+
 	for _, requesterAvailability := range rc.Requesters {
+		// If requester is not available -> skip.
 		if !requesterAvailability.Available {
 			continue
 		}
 
-		fmt.Print(requesterAvailability.requester.GetName() + ": ")
+		// Getting info
 		link, name, err = requesterAvailability.requester.GetInfo()
+
 		if err == nil {
-			fmt.Println(link)
+			// Everything is ok, adding.
+			log.Println(requesterAvailability.requester.GetName() + ": " + link)
 			links = append(links, UserInfo{
 				SocialNetwork: requesterAvailability.requester.GetName(),
 				Link:          link,
@@ -54,7 +74,8 @@ func (rc *RequesterContainer) GetLinks() []UserInfo {
 				IsAvailable:   true,
 			})
 		} else {
-			fmt.Println(err)
+			// Error occurred.
+			log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
 			links = append(links, UserInfo{
 				SocialNetwork: requesterAvailability.requester.GetName(),
 				Link:          "page not found",
@@ -63,5 +84,6 @@ func (rc *RequesterContainer) GetLinks() []UserInfo {
 			})
 		}
 	}
+
 	return links
 }
