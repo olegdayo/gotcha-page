@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Custom handler.
+// Handler struct is a custom handler.
 type Handler struct {
 	Name string
 }
