@@ -109,12 +109,12 @@ func TestGetInfo(t *testing.T) {
 		},
 		{
 			requesters.NewSocialNetworkRequester(
-				"instagram",
-				"instagram.com",
-				"olegsama",
+				"Gitlab",
+				"gitlab.com",
+				"OFFLUCK",
 			),
-			"https://instagram.com/olegsama",
-			"Oleg (@olegsama) • Instagram photos and videos",
+			"https://gitlab.com/OFFLUCK",
+			"Oleg · GitLab",
 		},
 		{
 			requesters.NewSocialNetworkRequester(
@@ -136,8 +136,8 @@ func TestGetInfo(t *testing.T) {
 		},
 		{
 			requesters.NewSocialNetworkRequester(
-				"instagram",
-				"instagram.com",
+				"Youtube",
+				"youtube.com/c",
 				"jcsxiuaiunxiu378wbedxs78w33bd2eqw9emimads0wq9oiqwd",
 			),
 			"page not found",
