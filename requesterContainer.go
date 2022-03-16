@@ -3,6 +3,7 @@ package main
 import (
 	"gotchaPage/requesters"
 	"log"
+	"sort"
 )
 
 // RequesterAvailability struct which shows if we will use the requester or not.
@@ -40,10 +41,12 @@ type RequesterContainer struct {
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
 	pc.Requesters = map[string]RequesterAvailability{
+		"github":    {requesters.NewSocialNetworkRequester("Github", "github.com", nickname), false},
+		"gitlab":    {requesters.NewSocialNetworkRequester("Gitlab", "gitlab.com", nickname), false},
+		"instagram": {requesters.NewSocialNetworkRequester("Instagram", "instagram.com", nickname), false},
 		"telegram":  {requesters.NewTelegramRequester(nickname), false},
 		"vk":        {requesters.NewSocialNetworkRequester("VK", "vk.com", nickname), false},
-		"instagram": {requesters.NewSocialNetworkRequester("Instagram", "instagram.com", nickname), false},
-		"github":    {requesters.NewSocialNetworkRequester("Github", "github.com", nickname), false},
+		"youtube":   {requesters.NewSocialNetworkRequester("YouTube", "youtube.com/c", nickname), false},
 	}
 	return pc
 }
@@ -56,6 +59,7 @@ func (rc *RequesterContainer) GetLinks() []UserInfo {
 	var err error
 
 	for _, requesterAvailability := range rc.Requesters {
+		log.Println(requesterAvailability.requester.GetName())
 		// If requester is not available -> skip.
 		if !requesterAvailability.Available {
 			continue
@@ -85,5 +89,8 @@ func (rc *RequesterContainer) GetLinks() []UserInfo {
 		}
 	}
 
+	sort.Slice(links, func(i int, j int) bool {
+		return links[i].SocialNetwork < links[j].SocialNetwork
+	})
 	return links
 }
