@@ -10,6 +10,7 @@ type Handler struct {
 	Name string
 }
 
+// ServeHTTP is Handler's main function.
 func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	page(rw, r)
 }
