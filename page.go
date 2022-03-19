@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -39,32 +40,29 @@ func getUsedLinks(r *http.Request) []UserInfo {
 	return container.GetLinks()
 }
 
+// AnswerPage is answer page info struct.
+type AnswerPage struct {
+	LinkInfo template.HTML
+	String   string
+}
+
 // Writing answer to HTML-style string and sending it on server.
 func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
-	var ansPage string = `<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<meta charset="UTF-8"/>
-		<title>Answer</title>
-		<link rel="stylesheet" href="assets/answer.css">
-	</head>
-		
-	<body>
-	<div class="links">
-	`
+	var ansPage *template.Template = template.Must(template.ParseFiles("templates/answerTemplate.html"))
+	var pageInfo *AnswerPage = new(AnswerPage)
+
 	log.Println(getUsedLinks(r))
+
 	for _, user := range getUsedLinks(r) {
 		if user.IsAvailable {
-			ansPage += fmt.Sprintf("\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
+			pageInfo.String += fmt.Sprintf("\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
 		} else {
-			ansPage += fmt.Sprintf("\t<a name=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.SocialNetwork, user.Link)
+			pageInfo.String += fmt.Sprintf("\t<a name=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.SocialNetwork, user.Link)
 		}
 	}
 
-	ansPage += `</div>
-	</body>
-	</html>`
-
+	log.Println(pageInfo)
+	pageInfo.LinkInfo = template.HTML(pageInfo.String)
+	ansPage.Execute(rw, pageInfo)
 	log.Println(ansPage)
-	fmt.Fprintf(rw, ansPage)
 }
