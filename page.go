@@ -11,11 +11,11 @@ import (
 // Building form if it is not POST request else answer.
 func page(rw http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		page, err := ioutil.ReadFile("page.html")
+		pageHTML, err := ioutil.ReadFile("page.html")
 		if err != nil {
 			panic(err)
 		}
-		rw.Write(page)
+		rw.Write(pageHTML)
 	} else {
 		buildAnswerPage(rw, r)
 	}
@@ -48,7 +48,7 @@ type AnswerPage struct {
 
 // Writing answer to HTML-style string and sending it on server.
 func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
-	var ansPage *template.Template = template.Must(template.ParseFiles("templates/answerTemplate.html"))
+	var ansPage *template.Template = template.Must(template.ParseFiles("templates/answer.html"))
 	var pageInfo *AnswerPage = new(AnswerPage)
 
 	log.Println(getUsedLinks(r))

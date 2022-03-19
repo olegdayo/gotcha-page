@@ -7,6 +7,7 @@ import (
 
 // Handler struct is a custom handler.
 type Handler struct {
+	http.Handler
 	Name string
 }
 
@@ -22,8 +23,7 @@ func runServer(port string) error {
 	// Adding root.
 	mux.Handle("/", hand)
 	// Adding CSS files.
-	mux.Handle("/assets/", http.StripPrefix("/assets/",
-		http.FileServer(http.Dir("assets"))))
+	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	log.Println("Start")
 	err := http.ListenAndServe(port, mux)
