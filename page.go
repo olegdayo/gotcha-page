@@ -55,9 +55,9 @@ func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
 
 	for _, user := range getUsedLinks(r) {
 		if user.IsAvailable {
-			pageInfo.String += fmt.Sprintf("\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
+			pageInfo.String += fmt.Sprintf("\t<li>\n\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t</li>\t\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
 		} else {
-			pageInfo.String += fmt.Sprintf("\t<a name=\"%s\">%s: %s</a>\n\t<br/>\n", user.SocialNetwork, user.SocialNetwork, user.Link)
+			pageInfo.String += fmt.Sprintf("\t<li>\n\t<a name=\"%s\">%s: %s</a>\n\t</li>\t\n", user.SocialNetwork, user.SocialNetwork, user.Link)
 		}
 	}
 

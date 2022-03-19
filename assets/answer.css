@@ -2,3 +2,7 @@
     text-align: center;
     color: darkblue;
 }
+
+ul {
+    list-style-type: none;
+}
