@@ -4,6 +4,7 @@ import (
 	"gotchaPage/requesters"
 	"log"
 	"sort"
+	"sync"
 )
 
 // RequesterAvailability struct which shows if we will use the requester or not.
@@ -33,7 +34,7 @@ type RequesterContainer struct {
 	// Nickname of a user we are looking for.
 	nickname string
 	// Requesters.
-	Requesters map[string]RequesterAvailability
+	Requesters map[string]*RequesterAvailability
 }
 
 type Page struct {
@@ -54,9 +55,9 @@ var Pages []*Page = []*Page{
 // NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
-	pc.Requesters = make(map[string]RequesterAvailability)
+	pc.Requesters = make(map[string]*RequesterAvailability)
 	for _, page := range Pages {
-		pc.Requesters[page.ID] = RequesterAvailability{
+		pc.Requesters[page.ID] = &RequesterAvailability{
 			requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname),
 			false,
 		}
@@ -64,12 +65,39 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 	return pc
 }
 
+// GetLink gets all users' with given nickname info from given site.
+func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, wg *sync.WaitGroup, mutex *sync.Mutex) {
+	defer wg.Done()
+	// Getting info
+	link, name, err := requesterAvailability.requester.GetInfo()
+
+	mutex.Lock()
+	if err == nil {
+		// Everything is ok, adding.
+		log.Println(requesterAvailability.requester.GetName() + ": " + link)
+		*links = append(*links, &UserInfo{
+			SocialNetwork: requesterAvailability.requester.GetName(),
+			Link:          link,
+			Name:          name,
+			IsAvailable:   true,
+		})
+	} else {
+		// Error occurred.
+		log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
+		*links = append(*links, &UserInfo{
+			SocialNetwork: requesterAvailability.requester.GetName(),
+			Link:          "page not found",
+			Name:          name,
+			IsAvailable:   false,
+		})
+	}
+	mutex.Unlock()
+}
+
 // GetLinks gets all users' with given nickname info from given slice of sites.
-func (rc *RequesterContainer) GetLinks() []UserInfo {
-	var links []UserInfo
-	var link string
-	var name string
-	var err error
+func (rc *RequesterContainer) GetLinks() []*UserInfo {
+	var links []*UserInfo
+	wg := sync.WaitGroup{}
 
 	for _, requesterAvailability := range rc.Requesters {
 		log.Println(requesterAvailability.requester.GetName())
@@ -78,30 +106,12 @@ func (rc *RequesterContainer) GetLinks() []UserInfo {
 			continue
 		}
 
-		// Getting info
-		link, name, err = requesterAvailability.requester.GetInfo()
-
-		if err == nil {
-			// Everything is ok, adding.
-			log.Println(requesterAvailability.requester.GetName() + ": " + link)
-			links = append(links, UserInfo{
-				SocialNetwork: requesterAvailability.requester.GetName(),
-				Link:          link,
-				Name:          name,
-				IsAvailable:   true,
-			})
-		} else {
-			// Error occurred.
-			log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
-			links = append(links, UserInfo{
-				SocialNetwork: requesterAvailability.requester.GetName(),
-				Link:          "page not found",
-				Name:          name,
-				IsAvailable:   false,
-			})
-		}
+		wg.Add(1)
+		mutex := sync.Mutex{}
+		go GetLink(requesterAvailability, &links, &wg, &mutex)
 	}
 
+	wg.Wait()
 	sort.Slice(links, func(i int, j int) bool {
 		return links[i].SocialNetwork < links[j].SocialNetwork
 	})

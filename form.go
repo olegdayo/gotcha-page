@@ -39,7 +39,7 @@ func page(rw http.ResponseWriter, r *http.Request) {
 }
 
 // Checking which textboxes are set on and creating container of user info then getting answer.
-func getUsedLinks(r *http.Request) []UserInfo {
+func getUsedLinks(r *http.Request) []*UserInfo {
 	r.ParseForm()
 	nick := r.FormValue("nickname")
 	log.Println(r.Form)
@@ -47,7 +47,7 @@ func getUsedLinks(r *http.Request) []UserInfo {
 	container := NewRequesterContainer(nick)
 	for key, _ := range r.Form {
 		if _, ok := container.Requesters[key]; ok {
-			container.Requesters[key] = RequesterAvailability{
+			container.Requesters[key] = &RequesterAvailability{
 				container.Requesters[key].requester,
 				true,
 			}
