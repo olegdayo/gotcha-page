@@ -3,22 +3,39 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
 
+type FormPage struct {
+	CheckBoxInfo template.HTML
+	String       string
+}
+
 // Building form if it is not POST request else answer.
 func page(rw http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		pageHTML, err := ioutil.ReadFile("page.html")
-		if err != nil {
-			panic(err)
-		}
-		rw.Write(pageHTML)
-	} else {
+	if r.Method == http.MethodPost {
 		buildAnswerPage(rw, r)
+		return
 	}
+
+	var formPage *template.Template = template.Must(template.ParseFiles("templates/form.html"))
+	var pageInfo *FormPage = new(FormPage)
+	pageInfo.String = "<ul>\n"
+
+	for _, page := range Pages {
+		pageInfo.String += fmt.Sprintf(`
+            <li>
+                <label for="%s">%s</label>
+                <input type="checkbox" id="%s" name="%s"/>
+            </li>
+		`, page.ID, page.Name, page.ID, page.ID)
+	}
+
+	pageInfo.String += "</ul>\n"
+	log.Println(pageInfo)
+	pageInfo.CheckBoxInfo = template.HTML(pageInfo.String)
+	formPage.Execute(rw, pageInfo)
 }
 
 // Checking which textboxes are set on and creating container of user info then getting answer.
@@ -48,9 +65,9 @@ type AnswerPage struct {
 
 // Writing answer to HTML-style string and sending it on server.
 func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
-	var ansPage *template.Template = template.Must(template.ParseFiles("templates/answer.html"))
+	var answerPage *template.Template = template.Must(template.ParseFiles("templates/answer.html"))
 	var pageInfo *AnswerPage = new(AnswerPage)
-
+	pageInfo.String = "<ul>\n"
 	log.Println(getUsedLinks(r))
 
 	for _, user := range getUsedLinks(r) {
@@ -61,8 +78,9 @@ func buildAnswerPage(rw http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	pageInfo.String += "</ul>\n"
 	log.Println(pageInfo)
 	pageInfo.LinkInfo = template.HTML(pageInfo.String)
-	ansPage.Execute(rw, pageInfo)
-	log.Println(ansPage)
+	answerPage.Execute(rw, pageInfo)
+	log.Println(answerPage)
 }

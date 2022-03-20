@@ -36,17 +36,30 @@ type RequesterContainer struct {
 	Requesters map[string]RequesterAvailability
 }
 
+type Page struct {
+	ID   string
+	Name string
+	URL  string
+}
+
+var Pages []*Page = []*Page{
+	{"github", "Github", "github.com"},
+	{"gitlab", "Gitlab", "gitlab.com"},
+	{"instagram", "Instagram", "instagram.com"},
+	{"vk", "VK", "vk.com"},
+	{"youtube", "Youtube", "youtube.com/c"},
+}
+
 // NewRequesterContainer initializes all requesters we have.
 // NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
-	pc.Requesters = map[string]RequesterAvailability{
-		"github":    {requesters.NewSocialNetworkRequester("Github", "github.com", nickname), false},
-		"gitlab":    {requesters.NewSocialNetworkRequester("Gitlab", "gitlab.com", nickname), false},
-		"instagram": {requesters.NewSocialNetworkRequester("Instagram", "instagram.com", nickname), false},
-		"telegram":  {requesters.NewTelegramRequester(nickname), false},
-		"vk":        {requesters.NewSocialNetworkRequester("VK", "vk.com", nickname), false},
-		"youtube":   {requesters.NewSocialNetworkRequester("YouTube", "youtube.com/c", nickname), false},
+	pc.Requesters = make(map[string]RequesterAvailability)
+	for _, page := range Pages {
+		pc.Requesters[page.ID] = RequesterAvailability{
+			requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname),
+			false,
+		}
 	}
 	return pc
 }
