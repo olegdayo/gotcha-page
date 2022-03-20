@@ -3,12 +3,18 @@ package main
 import (
 	"log"
 	"net/http"
+	"runtime"
 )
 
 // Handler struct is a custom handler.
 type Handler struct {
 	http.Handler
 	Name string
+}
+
+// Setting configurations.
+func configs() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
 // ServeHTTP is Handler's main function.
@@ -31,6 +37,7 @@ func runServer(port string) error {
 }
 
 func main() {
+	configs()
 	err := runServer(":8080")
 	if err != nil {
 		panic(err)
