@@ -22,6 +22,7 @@ func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	page(rw, r)
 }
 
+// Adds root, assets and starts the server.
 func runServer(port string) error {
 	mux := http.NewServeMux()
 	var hand *Handler = &Handler{Name: "Handy"}
@@ -36,6 +37,7 @@ func runServer(port string) error {
 	return err
 }
 
+// Here we start.
 func main() {
 	configs()
 	err := runServer(":8080")
