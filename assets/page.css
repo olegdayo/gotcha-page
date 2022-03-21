@@ -19,3 +19,13 @@ ul {
 li > label {
     color: black;
 }
+
+.links {
+    text-align: center;
+    color: darkblue;
+    list-style-type: none;
+}
+
+h3 {
+    color: blue;
+}
