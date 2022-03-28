@@ -14,15 +14,8 @@
             <input type="text" name="nickname" style="color:black;"/>
         </label>
         <br/>
-        <input type="submit" id="sender" value="Get pages!" onsubmit="(e) => formSubmit(e)"/>
-        <script>
-            function formSubmit(e) {
-                e.preventDefault()
-                let formNick = document.getElementById("nicknameForm")[0];
-                formNick.submit();
-                return false;
-            }
-        </script>
+        <input type="submit" id="sender" value="Get pages!" onsubmit="formSubmit()"/>
+        <script src="../scripts/submit.js"></script>
     </div>
 
     <div class="ticks">
