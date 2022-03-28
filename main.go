@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 	"runtime"
 )
 
@@ -41,9 +40,7 @@ func runServer(port string) error {
 // Here we start.
 func main() {
 	configs()
-	port := os.Getenv("PORT")
-	log.Println(":" + port)
-	err := runServer(":" + port)
+	err := runServer(":8080")
 	if err != nil {
 		panic(err)
 	}
