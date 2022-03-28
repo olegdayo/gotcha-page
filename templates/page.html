@@ -7,14 +7,22 @@
 </head>
 
 <body>
-<form action="/" method="post">
+<form id="nicknameForm" action="/" method="post">
     <div class="form">
         <label>
             Nickname:
             <input type="text" name="nickname" style="color:black;"/>
         </label>
         <br/>
-        <input type="submit" id="sender" value="Get pages!"/>
+        <input type="submit" id="sender" value="Get pages!" onsubmit="(e) => formSubmit(e)"/>
+        <script>
+            function formSubmit(e) {
+                e.preventDefault()
+                let formNick = document.getElementById("nicknameForm")[0];
+                formNick.submit();
+                return false;
+            }
+        </script>
     </div>
 
     <div class="ticks">
