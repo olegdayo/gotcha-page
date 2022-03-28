@@ -47,6 +47,7 @@ var Pages []*Page = []*Page{
 	{"github", "Github", "github.com"},
 	{"gitlab", "Gitlab", "gitlab.com"},
 	{"instagram", "Instagram", "instagram.com"},
+	{"reddit", "Reddit", "reddit.com/user"},
 	{"vk", "VK", "vk.com"},
 	{"youtube", "Youtube", "youtube.com/c"},
 }
@@ -86,7 +87,7 @@ func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, w
 		log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
 		*links = append(*links, &UserInfo{
 			SocialNetwork: requesterAvailability.requester.GetName(),
-			Link:          "page not found",
+			Link:          err.Error(),
 			Name:          name,
 			IsAvailable:   false,
 		})
@@ -100,11 +101,12 @@ func (rc *RequesterContainer) GetLinks() []*UserInfo {
 	wg := sync.WaitGroup{}
 
 	for _, requesterAvailability := range rc.Requesters {
-		log.Println(requesterAvailability.requester.GetName())
 		// If requester is not available -> skip.
 		if !requesterAvailability.Available {
 			continue
 		}
+
+		log.Println(requesterAvailability.requester.GetName())
 
 		wg.Add(1)
 		mutex := sync.Mutex{}
