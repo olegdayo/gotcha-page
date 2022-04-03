@@ -29,3 +29,13 @@ li > label {
 h3 {
     color: blue;
 }
+
+body {
+    background: #96f3cf;
+    font: 16px "Fira Sans", sans-serif;
+}
+
+h3 {
+    font-size: 20px;
+    font-style: italic;
+}
