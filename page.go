@@ -23,21 +23,25 @@ func page(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	var formPage *template.Template = template.Must(template.ParseFiles("templates/page.html"))
-	pageInfo := addCheckBoxes()
+	pageInfo := addCheckBoxes(NewRequesterContainer(""))
 	formPage.Execute(rw, pageInfo)
 }
 
 // Adds check boxes on page.
-func addCheckBoxes() *HTMLInfo {
+func addCheckBoxes(container *RequesterContainer) *HTMLInfo {
 	var pageInfo *HTMLInfo = new(HTMLInfo)
-
+	var isChecked string
 	for _, page := range Pages {
+		isChecked = ""
+		if container.Requesters[page.ID].Available {
+			isChecked = "checked"
+		}
 		pageInfo.CheckBoxInfoString += fmt.Sprintf(`
             <li>
                 <label for="%s">%s</label>
-                <input type="checkbox" name="%s" id="%s"/>
+                <input type="checkbox" name="%s" id="%s"%s/>
             </li>
-		`, page.ID, page.Name, page.ID, page.ID)
+		`, page.ID, page.Name, page.ID, page.ID, isChecked)
 	}
 	log.Println(pageInfo)
 	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString)
@@ -45,8 +49,7 @@ func addCheckBoxes() *HTMLInfo {
 }
 
 // Checking which textboxes are set on and creating container of user info then getting answer.
-func getUsedLinks(r *http.Request, nickname string) []*UserInfo {
-	container := NewRequesterContainer(nickname)
+func getUsedLinks(r *http.Request, container *RequesterContainer) []*UserInfo {
 	for key, _ := range r.Form {
 		if _, ok := container.Requesters[key]; ok {
 			container.Requesters[key] = &RequesterAvailability{
@@ -63,12 +66,16 @@ func getUsedLinks(r *http.Request, nickname string) []*UserInfo {
 // Adds answers to page.
 func addAnswers(rw http.ResponseWriter, r *http.Request) {
 	var answerPage *template.Template = template.Must(template.ParseFiles("templates/page.html"))
-	pageInfo := addCheckBoxes()
 
 	r.ParseForm()
 	nick := r.FormValue("nickname")
 	log.Println(r.Form)
 
+	container := NewRequesterContainer(nick)
+	users := getUsedLinks(r, container)
+	log.Println(users)
+
+	pageInfo := addCheckBoxes(container)
 	if nick == "" {
 		pageInfo.LinkInfoString = "<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n"
 		log.Println(pageInfo)
@@ -77,9 +84,6 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 		log.Println(answerPage)
 		return
 	}
-
-	users := getUsedLinks(r, nick)
-	log.Println(users)
 
 	if len(users) == 0 {
 		pageInfo.LinkInfoString = "<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n"
