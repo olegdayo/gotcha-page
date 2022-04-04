@@ -9,6 +9,8 @@ import (
 
 // HTMLInfo contains all page info.
 type HTMLInfo struct {
+	NicknameInfo       template.HTML
+	NicknameInfoString string
 	CheckBoxInfo       template.HTML
 	CheckBoxInfoString string
 	LinkInfo           template.HTML
@@ -23,12 +25,12 @@ func page(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	var formPage *template.Template = template.Must(template.ParseFiles("templates/page.html"))
-	pageInfo := addCheckBoxes(NewRequesterContainer(""))
+	pageInfo := addCheckBoxesAndNickname(NewRequesterContainer(""), "")
 	formPage.Execute(rw, pageInfo)
 }
 
 // Adds check boxes on page.
-func addCheckBoxes(container *RequesterContainer) *HTMLInfo {
+func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *HTMLInfo {
 	var pageInfo *HTMLInfo = new(HTMLInfo)
 	var isChecked string
 	for _, page := range Pages {
@@ -45,6 +47,7 @@ func addCheckBoxes(container *RequesterContainer) *HTMLInfo {
 	}
 	log.Println(pageInfo)
 	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString)
+	pageInfo.NicknameInfo = template.HTML(nickname)
 	return pageInfo
 }
 
@@ -75,7 +78,7 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 	users := getUsedLinks(r, container)
 	log.Println(users)
 
-	pageInfo := addCheckBoxes(container)
+	pageInfo := addCheckBoxesAndNickname(container, nick)
 	if nick == "" {
 		pageInfo.LinkInfoString = "<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n"
 		log.Println(pageInfo)
