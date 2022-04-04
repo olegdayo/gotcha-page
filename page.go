@@ -29,7 +29,7 @@ func page(rw http.ResponseWriter, r *http.Request) {
 	formPage.Execute(rw, pageInfo)
 }
 
-// Adds check boxes on page.
+// Adds check boxes and nickname value in text input field on page.
 func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *HTMLInfo {
 	var pageInfo *HTMLInfo = new(HTMLInfo)
 	var isChecked string
@@ -51,8 +51,8 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
 	return pageInfo
 }
 
-// Checking which textboxes are set on and creating container of user info then getting answer.
-func getUsedLinks(r *http.Request, container *RequesterContainer) []*UserInfo {
+// Checking which textboxes are set.
+func setUsedLinks(r *http.Request, container *RequesterContainer) {
 	for key, _ := range r.Form {
 		if _, ok := container.Requesters[key]; ok {
 			container.Requesters[key] = &RequesterAvailability{
@@ -62,8 +62,6 @@ func getUsedLinks(r *http.Request, container *RequesterContainer) []*UserInfo {
 			fmt.Println("OK")
 		}
 	}
-
-	return container.GetLinks()
 }
 
 // Adds answers to page.
@@ -74,11 +72,16 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 	nick := r.FormValue("nickname")
 	log.Println(r.Form)
 
+	// Container initialization and execution.
 	container := NewRequesterContainer(nick)
-	users := getUsedLinks(r, container)
+	setUsedLinks(r, container)
+	users := container.GetLinks()
 	log.Println(users)
 
+	// Setting page and getting all the info about it.
 	pageInfo := addCheckBoxesAndNickname(container, nick)
+
+	// Checking if nickname is ok.
 	if nick == "" {
 		pageInfo.LinkInfoString = "<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n"
 		log.Println(pageInfo)
@@ -88,6 +91,7 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Checking if any sites are set.
 	if len(users) == 0 {
 		pageInfo.LinkInfoString = "<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n"
 		log.Println(pageInfo)
@@ -97,8 +101,8 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Filling page info.
 	pageInfo.LinkInfoString = fmt.Sprintf("<h3>Results for nickname \"%s\":</h3>\n\t\t<ul>\n", nick)
-
 	for _, user := range users {
 		if user.IsAvailable {
 			pageInfo.LinkInfoString += fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
@@ -106,10 +110,11 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 			pageInfo.LinkInfoString += fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n", user.SocialNetwork, user.SocialNetwork, user.Link)
 		}
 	}
-
 	pageInfo.LinkInfoString += "\t\t</ul>"
 	log.Println(pageInfo)
 	pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString)
+
+	// Sending data to html.
 	answerPage.Execute(rw, pageInfo)
 	log.Println(answerPage)
 }
