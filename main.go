@@ -35,6 +35,8 @@ func runServer(port string) error {
 	mux.Handle("/", hand)
 	// Adding CSS files.
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
+	// Adding JS files
+	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 
 	log.Println("Start")
 	err := http.ListenAndServe(port, mux)

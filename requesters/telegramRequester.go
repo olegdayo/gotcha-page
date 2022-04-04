@@ -13,9 +13,14 @@ func NewTelegramRequester(nickname string) *TelegramRequester {
 	return tr
 }
 
-// GetName gets name of social network.
+// GetName gets name of a social network.
 func (tr *TelegramRequester) GetName() string {
 	return tr.Name
+}
+
+// GetNickname gets nickname of a user.
+func (tr *TelegramRequester) GetNickname() string {
+	return tr.Nickname
 }
 
 // GetInfo gets url and name of user by their nickname.

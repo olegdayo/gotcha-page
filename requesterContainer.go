@@ -17,6 +17,8 @@ type RequesterAvailability struct {
 
 // UserInfo is a struct with all user info.
 type UserInfo struct {
+	// User's nickname.
+	Nickname string
 	// Social network name.
 	SocialNetwork string
 	// User's profile link.
@@ -69,7 +71,7 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 // GetLink gets all users' with given nickname info from given site.
 func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, wg *sync.WaitGroup, mutex *sync.Mutex) {
 	defer wg.Done()
-	// Getting info
+	// Getting info.
 	link, name, err := requesterAvailability.requester.GetInfo()
 
 	mutex.Lock()
@@ -77,6 +79,7 @@ func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, w
 		// Everything is ok, adding.
 		log.Println(requesterAvailability.requester.GetName() + ": " + link)
 		*links = append(*links, &UserInfo{
+			Nickname:      requesterAvailability.requester.GetNickname(),
 			SocialNetwork: requesterAvailability.requester.GetName(),
 			Link:          link,
 			Name:          name,
@@ -86,6 +89,7 @@ func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, w
 		// Error occurred.
 		log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
 		*links = append(*links, &UserInfo{
+			Nickname:      requesterAvailability.requester.GetNickname(),
 			SocialNetwork: requesterAvailability.requester.GetName(),
 			Link:          err.Error(),
 			Name:          name,

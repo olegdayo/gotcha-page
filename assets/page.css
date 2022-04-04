@@ -1,3 +1,8 @@
+body {
+    background: #96f3cf;
+    font: 16px "Fira Sans", sans-serif;
+}
+
 label {
     align-items: center;
     color: red;
@@ -6,6 +11,10 @@ label {
 input {
     align-self: center;
     color: aqua;
+}
+
+label[for="select-all"] {
+    color: darkblue;
 }
 
 .form {
@@ -20,22 +29,14 @@ li > label {
     color: black;
 }
 
+h3 {
+    color: blue;
+    font-size: 20px;
+    font-style: italic;
+}
+
 .links {
     text-align: center;
     color: darkblue;
     list-style-type: none;
-}
-
-h3 {
-    color: blue;
-}
-
-body {
-    background: #96f3cf;
-    font: 16px "Fira Sans", sans-serif;
-}
-
-h3 {
-    font-size: 20px;
-    font-style: italic;
 }

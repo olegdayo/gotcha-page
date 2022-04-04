@@ -29,9 +29,14 @@ func NewSocialNetworkRequester(name string, mainURl string, nickname string) *So
 	return snr
 }
 
-// GetName gets name of social network.
+// GetName gets name of a social network.
 func (snr *SocialNetworkRequester) GetName() string {
 	return snr.Name
+}
+
+// GetNickname gets nickname of a user.
+func (snr *SocialNetworkRequester) GetNickname() string {
+	return snr.Nickname
 }
 
 // GetInfo gets url and name of user by their nickname.

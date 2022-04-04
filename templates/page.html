@@ -4,6 +4,9 @@
     <meta charset="UTF-8"/>
     <title>GotchaPage</title>
     <link rel="stylesheet" href="../assets/page.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="../scripts/submit.js"></script>
+    <script src="../scripts/selectAll.js"></script>
 </head>
 
 <body>
@@ -15,11 +18,16 @@
         </label>
         <br/>
         <input type="submit" id="sender" value="Get pages!" onsubmit="formSubmit()"/>
-        <script src="../scripts/submit.js"></script>
     </div>
 
     <div class="ticks">
-        {{.CheckBoxInfo}}
+        <ul>
+            <li>
+                <label for="select-all">Select all</label>
+                <input type="checkbox" name="select-all" id="select-all" onclick="selectAll(this)">
+            </li>
+            {{.CheckBoxInfo}}
+        </ul>
     </div>
     <div class="links">
         {{.LinkInfo}}
