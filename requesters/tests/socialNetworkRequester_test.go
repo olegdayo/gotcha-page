@@ -7,6 +7,7 @@ import (
 )
 
 func TestNewSocialNetworkRequester(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		name     string
 		mainURL  string
@@ -64,6 +65,7 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 }
 
 func TestGetName(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		requester *requesters.SocialNetworkRequester
 		expected  string
@@ -105,6 +107,7 @@ func TestGetName(t *testing.T) {
 }
 
 func TestGetNickname(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		requester *requesters.SocialNetworkRequester
 		expected  string
@@ -146,6 +149,7 @@ func TestGetNickname(t *testing.T) {
 }
 
 func TestIsAvailable(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		requester *requesters.SocialNetworkRequester
 		expected  bool
@@ -190,6 +194,7 @@ func TestIsAvailable(t *testing.T) {
 }
 
 func TestSetAvailability(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		requester *requesters.SocialNetworkRequester
 		expected  bool
@@ -238,6 +243,7 @@ func TestSetAvailability(t *testing.T) {
 }
 
 func TestGetInfo(t *testing.T) {
+	t.Parallel()
 	testCases := []struct {
 		requester    *requesters.SocialNetworkRequester
 		expectedLink string
