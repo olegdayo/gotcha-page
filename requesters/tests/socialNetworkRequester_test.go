@@ -18,9 +18,10 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 			mainURL:  "vk.com",
 			nickname: "olegsama",
 			expected: &requesters.SocialNetworkRequester{
-				Name:     "VK",
-				MainURL:  "vk.com",
-				Nickname: "olegsama",
+				Name:      "VK",
+				MainURL:   "vk.com",
+				Nickname:  "olegsama",
+				Available: false,
 			},
 		},
 		{
@@ -28,9 +29,21 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 			mainURL:  "github.com",
 			nickname: "OFFLUCK",
 			expected: &requesters.SocialNetworkRequester{
-				Name:     "Github",
-				MainURL:  "github.com",
-				Nickname: "OFFLUCK",
+				Name:      "Github",
+				MainURL:   "github.com",
+				Nickname:  "OFFLUCK",
+				Available: false,
+			},
+		},
+		{
+			name:     "Gitlab",
+			mainURL:  "gitlab.com",
+			nickname: "OFFLUCK",
+			expected: &requesters.SocialNetworkRequester{
+				Name:      "Gitlab",
+				MainURL:   "gitlab.com",
+				Nickname:  "OFFLUCK",
+				Available: false,
 			},
 		},
 	}
@@ -44,7 +57,7 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 			)
 
 			if *testCase.expected != *got {
-				t.Errorf("Expected: %s; got: %s\n", testCase.expected, got)
+				t.Errorf("Error while testing %s", testCase.expected.GetName())
 			}
 		})
 	}
@@ -71,6 +84,14 @@ func TestGetName(t *testing.T) {
 			),
 			"Github",
 		},
+		{
+			requesters.NewSocialNetworkRequester(
+				"Gitlab",
+				"gitlab.com",
+				"OFFLUCK",
+			),
+			"Gitlab",
+		},
 	}
 
 	for index, testCase := range testCases {
@@ -78,6 +99,139 @@ func TestGetName(t *testing.T) {
 			got := testCase.requester.GetName()
 			if testCase.expected != got {
 				t.Errorf("Expected: %s; got: %s\n", testCase.expected, got)
+			}
+		})
+	}
+}
+
+func TestGetNickname(t *testing.T) {
+	testCases := []struct {
+		requester *requesters.SocialNetworkRequester
+		expected  string
+	}{
+		{
+			requesters.NewSocialNetworkRequester(
+				"VK",
+				"vk.com",
+				"olegsama",
+			),
+			"olegsama",
+		},
+		{
+			requesters.NewSocialNetworkRequester(
+				"Github",
+				"github.com",
+				"OFFLUCK",
+			),
+			"OFFLUCK",
+		},
+		{
+			requesters.NewSocialNetworkRequester(
+				"Gitlab",
+				"gitlab.com",
+				"OFFLUCK",
+			),
+			"OFFLUCK",
+		},
+	}
+
+	for index, testCase := range testCases {
+		t.Run(fmt.Sprintf("Test№%d", index), func(t *testing.T) {
+			got := testCase.requester.GetNickname()
+			if testCase.expected != got {
+				t.Errorf("Expected: %s; got: %s\n", testCase.expected, got)
+			}
+		})
+	}
+}
+
+func TestIsAvailable(t *testing.T) {
+	testCases := []struct {
+		requester *requesters.SocialNetworkRequester
+		expected  bool
+	}{
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "VK",
+				MainURL:   "vk.com",
+				Nickname:  "olegsama",
+				Available: false,
+			},
+			expected: false,
+		},
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "Github",
+				MainURL:   "github.com",
+				Nickname:  "OFFLUCK",
+				Available: true,
+			},
+			expected: true,
+		},
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "Gitlab",
+				MainURL:   "gitlab.com",
+				Nickname:  "OFFLUCK",
+				Available: true,
+			},
+			expected: true,
+		},
+	}
+
+	for index, testCase := range testCases {
+		t.Run(fmt.Sprintf("Test№%d", index), func(t *testing.T) {
+			got := testCase.requester.IsAvailable()
+			if testCase.expected != got {
+				t.Errorf("Expected: %v; got: %v\n", testCase.expected, got)
+			}
+		})
+	}
+}
+
+func TestSetAvailability(t *testing.T) {
+	testCases := []struct {
+		requester *requesters.SocialNetworkRequester
+		expected  bool
+	}{
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "VK",
+				MainURL:   "vk.com",
+				Nickname:  "olegsama",
+				Available: false,
+			},
+			expected: false,
+		},
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "Github",
+				MainURL:   "github.com",
+				Nickname:  "OFFLUCK",
+				Available: true,
+			},
+			expected: true,
+		},
+		{
+			requester: &requesters.SocialNetworkRequester{
+				Name:      "Gitlab",
+				MainURL:   "gitlab.com",
+				Nickname:  "OFFLUCK",
+				Available: true,
+			},
+			expected: true,
+		},
+	}
+
+	var setter bool = true
+	for index, testCase := range testCases {
+		t.Run(fmt.Sprintf("Test№%d", index), func(t *testing.T) {
+			testCase.requester.SetAvailability(setter)
+			testCase.expected = setter
+			setter = !setter
+			got := testCase.requester.IsAvailable()
+			if testCase.expected != got {
+				t.Errorf("Expected: %v; got: %v\n", testCase.expected, got)
 			}
 		})
 	}

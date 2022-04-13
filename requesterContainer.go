@@ -7,6 +7,7 @@ import (
 	"sync"
 )
 
+// RequesterAvailability is now unused.
 // RequesterAvailability struct which shows if we will use the requester or not.
 type RequesterAvailability struct {
 	// Requester itself.
@@ -36,7 +37,7 @@ type RequesterContainer struct {
 	// Nickname of a user we are looking for.
 	nickname string
 	// Requesters.
-	Requesters map[string]*RequesterAvailability
+	Requesters map[string]requesters.Requester
 }
 
 type Page struct {
@@ -49,7 +50,6 @@ var Pages []*Page = []*Page{
 	{"github", "Github", "github.com"},
 	{"gitlab", "Gitlab", "gitlab.com"},
 	{"instagram", "Instagram", "instagram.com"},
-	{"reddit", "Reddit", "reddit.com/user"},
 	{"vk", "VK", "vk.com"},
 	{"youtube", "Youtube", "youtube.com/c"},
 }
@@ -58,39 +58,36 @@ var Pages []*Page = []*Page{
 // NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
-	pc.Requesters = make(map[string]*RequesterAvailability)
+	pc.Requesters = make(map[string]requesters.Requester)
 	for _, page := range Pages {
-		pc.Requesters[page.ID] = &RequesterAvailability{
-			requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname),
-			false,
-		}
+		pc.Requesters[page.ID] = requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname)
 	}
 	return pc
 }
 
 // GetLink gets all users' with given nickname info from given site.
-func GetLink(requesterAvailability *RequesterAvailability, links *[]*UserInfo, wg *sync.WaitGroup, mutex *sync.Mutex) {
+func GetLink(requester requesters.Requester, links *[]*UserInfo, wg *sync.WaitGroup, mutex *sync.Mutex) {
 	defer wg.Done()
 	// Getting info.
-	link, name, err := requesterAvailability.requester.GetInfo()
+	link, name, err := requester.GetInfo()
 
 	mutex.Lock()
 	if err == nil {
 		// Everything is ok, adding.
-		log.Println(requesterAvailability.requester.GetName() + ": " + link)
+		log.Println(requester.GetName() + ": " + link)
 		*links = append(*links, &UserInfo{
-			Nickname:      requesterAvailability.requester.GetNickname(),
-			SocialNetwork: requesterAvailability.requester.GetName(),
+			Nickname:      requester.GetNickname(),
+			SocialNetwork: requester.GetName(),
 			Link:          link,
 			Name:          name,
 			IsAvailable:   true,
 		})
 	} else {
 		// Error occurred.
-		log.Println(requesterAvailability.requester.GetName() + ": " + err.Error())
+		log.Println(requester.GetName() + ": " + err.Error())
 		*links = append(*links, &UserInfo{
-			Nickname:      requesterAvailability.requester.GetNickname(),
-			SocialNetwork: requesterAvailability.requester.GetName(),
+			Nickname:      requester.GetNickname(),
+			SocialNetwork: requester.GetName(),
 			Link:          err.Error(),
 			Name:          name,
 			IsAvailable:   false,
@@ -106,11 +103,11 @@ func (rc *RequesterContainer) GetLinks() []*UserInfo {
 
 	for _, requesterAvailability := range rc.Requesters {
 		// If requester is not available -> skip.
-		if !requesterAvailability.Available {
+		if !requesterAvailability.IsAvailable() {
 			continue
 		}
 
-		log.Println(requesterAvailability.requester.GetName())
+		log.Println(requesterAvailability.GetName())
 
 		wg.Add(1)
 		mutex := sync.Mutex{}

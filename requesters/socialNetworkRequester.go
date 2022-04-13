@@ -18,6 +18,9 @@ type SocialNetworkRequester struct {
 	// User's nickname.
 	// For example, "OFFLUCK".
 	Nickname string
+	// Requester availability.
+	// If available, it can be used to parse site.
+	Available bool
 }
 
 // NewSocialNetworkRequester is a constructor.
@@ -26,6 +29,7 @@ func NewSocialNetworkRequester(name string, mainURl string, nickname string) *So
 	snr.Name = name
 	snr.MainURL = mainURl
 	snr.Nickname = nickname
+	snr.Available = false
 	return snr
 }
 
@@ -37,6 +41,16 @@ func (snr *SocialNetworkRequester) GetName() string {
 // GetNickname gets nickname of a user.
 func (snr *SocialNetworkRequester) GetNickname() string {
 	return snr.Nickname
+}
+
+// IsAvailable shows if requester is available.
+func (snr *SocialNetworkRequester) IsAvailable() bool {
+	return snr.Available
+}
+
+// SetAvailability sets availability condition.
+func (snr *SocialNetworkRequester) SetAvailability(cond bool) {
+	snr.Available = cond
 }
 
 // GetInfo gets url and name of user by their nickname.

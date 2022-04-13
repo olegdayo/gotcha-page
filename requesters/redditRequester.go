@@ -1,6 +1,6 @@
 package requesters
 
-type TelegramRequester struct {
+type RedditRequester struct {
 	Name      string
 	Nickname  string
 	Available bool

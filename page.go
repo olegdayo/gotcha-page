@@ -35,7 +35,7 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
 	var isChecked string
 	for _, page := range Pages {
 		isChecked = ""
-		if container.Requesters[page.ID].Available {
+		if container.Requesters[page.ID].IsAvailable() {
 			isChecked = "checked"
 		}
 		pageInfo.CheckBoxInfoString += fmt.Sprintf(`
@@ -55,10 +55,7 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
 func setUsedLinks(r *http.Request, container *RequesterContainer) {
 	for key, _ := range r.Form {
 		if _, ok := container.Requesters[key]; ok {
-			container.Requesters[key] = &RequesterAvailability{
-				container.Requesters[key].requester,
-				true,
-			}
+			container.Requesters[key].SetAvailability(true)
 			fmt.Println("OK")
 		}
 	}
