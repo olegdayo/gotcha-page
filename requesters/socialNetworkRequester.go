@@ -72,7 +72,7 @@ func (snr *SocialNetworkRequester) GetInfo() (string, string, error) {
 	} else if page.StatusCode != 200 {
 		// Some other error.
 		// For example, 403 forbidden.
-		return "", "", errors.New(fmt.Sprintf("Status code is %d", page.StatusCode))
+		return "", "", errors.New(fmt.Sprintf("status code is %d", page.StatusCode))
 	}
 
 	// Getting goquery document.
