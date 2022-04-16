@@ -46,21 +46,17 @@ type Page struct {
 	URL  string
 }
 
-var Pages []*Page = []*Page{
-	{"github", "Github", "github.com"},
-	{"gitlab", "Gitlab", "gitlab.com"},
-	{"instagram", "Instagram", "instagram.com"},
-	{"vk", "VK", "vk.com"},
-	{"youtube", "Youtube", "youtube.com/c"},
-}
-
 // NewRequesterContainer initializes all requesters we have.
 // NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) *RequesterContainer {
 	pc := new(RequesterContainer)
-	pc.Requesters = make(map[string]requesters.Requester)
-	for _, page := range Pages {
-		pc.Requesters[page.ID] = requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname)
+	pc.Requesters = map[string]requesters.Requester{
+		"github":    requesters.NewSocialNetworkRequester("Github", "github.com", nickname),
+		"gitlab":    requesters.NewSocialNetworkRequester("Gitlab", "gitlab.com", nickname),
+		"instagram": requesters.NewSocialNetworkRequester("Instagram", "instagram.com", nickname),
+		"reddit":    requesters.NewRedditRequester("Reddit", "reddit.com/user", nickname),
+		"vk":        requesters.NewSocialNetworkRequester("VK", "vk.com", nickname),
+		"youtube":   requesters.NewSocialNetworkRequester("Youtube", "youtube.com/c", nickname),
 	}
 	return pc
 }

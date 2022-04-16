@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 )
 
 // HTMLInfo contains all page info.
@@ -29,13 +30,24 @@ func page(rw http.ResponseWriter, r *http.Request) {
 	formPage.Execute(rw, pageInfo)
 }
 
+func GetSortedKeys[K string, V any](m map[K]V) []K {
+	var keys []K
+	for k, _ := range m {
+		keys = append(keys, k)
+	}
+	sort.Slice(keys, func(i int, j int) bool {
+		return keys[i] < keys[j]
+	})
+	return keys
+}
+
 // Adds check boxes and nickname value in text input field on page.
 func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *HTMLInfo {
 	var pageInfo *HTMLInfo = new(HTMLInfo)
 	var isChecked string
-	for _, page := range Pages {
+	for _, key := range GetSortedKeys(container.Requesters) {
 		isChecked = ""
-		if container.Requesters[page.ID].IsAvailable() {
+		if container.Requesters[key].IsAvailable() {
 			isChecked = "checked"
 		}
 		pageInfo.CheckBoxInfoString += fmt.Sprintf(`
@@ -43,7 +55,7 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
                 <label for="%s">%s</label>
                 <input type="checkbox" name="%s" id="%s"%s/>
             </li>
-		`, page.ID, page.Name, page.ID, page.ID, isChecked)
+		`, key, container.Requesters[key].GetName(), key, key, isChecked)
 	}
 	log.Println(pageInfo)
 	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString)
