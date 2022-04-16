@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"github.com/vartanbeno/go-reddit/v2/reddit"
-	"strings"
 )
 
 type RedditRequester struct {
@@ -56,8 +55,7 @@ func (rr *RedditRequester) SetAvailability(cond bool) {
 func (rr *RedditRequester) GetInfo() (string, string, error) {
 	client := reddit.DefaultClient()
 
-	user, response, err := client.User.Get(context.Background(), "olegsama")
-	strings.Contains(response.Status, "badger badger badger")
+	user, _, err := client.User.Get(context.Background(), "olegsama")
 	if err != nil {
 		return "", "", errors.New("cannot reach user for now")
 	}
