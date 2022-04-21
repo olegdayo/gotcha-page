@@ -47,6 +47,7 @@ type Page struct {
 }
 
 var Pages []*Page = []*Page{
+	{"facebook", "Facebook", "facebook.com"},
 	{"github", "Github", "github.com"},
 	{"gitlab", "Gitlab", "gitlab.com"},
 	{"instagram", "Instagram", "instagram.com"},
