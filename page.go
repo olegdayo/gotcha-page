@@ -6,16 +6,17 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 )
 
 // HTMLInfo contains all page info.
 type HTMLInfo struct {
 	NicknameInfo       template.HTML
-	NicknameInfoString string
+	NicknameInfoString strings.Builder
 	CheckBoxInfo       template.HTML
-	CheckBoxInfoString string
+	CheckBoxInfoString strings.Builder
 	LinkInfo           template.HTML
-	LinkInfoString     string
+	LinkInfoString     strings.Builder
 }
 
 // Builds page.
@@ -50,15 +51,15 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
 		if container.Requesters[key].IsAvailable() {
 			isChecked = "checked"
 		}
-		pageInfo.CheckBoxInfoString += fmt.Sprintf(`
+		pageInfo.CheckBoxInfoString.Write([]byte(fmt.Sprintf(`
             <li>
                 <label for="%s">%s</label>
                 <input type="checkbox" name="%s" id="%s"%s/>
             </li>
-		`, key, container.Requesters[key].GetName(), key, key, isChecked)
+		`, key, container.Requesters[key].GetName(), key, key, isChecked)))
 	}
 	log.Println(pageInfo)
-	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString)
+	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString.String())
 	pageInfo.NicknameInfo = template.HTML(nickname)
 	return pageInfo
 }
@@ -92,9 +93,9 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 
 	// Checking if nickname is ok.
 	if nick == "" {
-		pageInfo.LinkInfoString = "<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n"
+		pageInfo.LinkInfoString.Write([]byte("<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n"))
 		log.Println(pageInfo)
-		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString)
+		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
 		answerPage.Execute(rw, pageInfo)
 		log.Println(answerPage)
 		return
@@ -102,26 +103,34 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 
 	// Checking if any sites are set.
 	if len(users) == 0 {
-		pageInfo.LinkInfoString = "<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n"
+		pageInfo.LinkInfoString.Write([]byte("<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n"))
 		log.Println(pageInfo)
-		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString)
+		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
 		answerPage.Execute(rw, pageInfo)
 		log.Println(answerPage)
 		return
 	}
 
 	// Filling page info.
-	pageInfo.LinkInfoString = fmt.Sprintf("<h3>Results for nickname \"%s\":</h3>\n\t\t<ul>\n", nick)
+	pageInfo.LinkInfoString.Write([]byte(fmt.Sprintf("<h3>Results for nickname \"%s\":</h3>\n\t\t<ul>\n", nick)))
 	for _, user := range users {
 		if user.IsAvailable {
-			pageInfo.LinkInfoString += fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n", user.SocialNetwork, user.Link, user.SocialNetwork, user.Name)
+			pageInfo.LinkInfoString.Write(
+				[]byte(fmt.Sprintf(
+					"\t\t\t<li>\n\t\t\t\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n",
+					user.SocialNetwork, user.Link, user.SocialNetwork, user.Name,
+				)))
 		} else {
-			pageInfo.LinkInfoString += fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n", user.SocialNetwork, user.SocialNetwork, user.Link)
+			pageInfo.LinkInfoString.Write(
+				[]byte(fmt.Sprintf(
+					"\t\t\t<li>\n\t\t\t\t<a name=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n",
+					user.SocialNetwork, user.SocialNetwork, user.Link,
+				)))
 		}
 	}
-	pageInfo.LinkInfoString += "\t\t</ul>"
+	pageInfo.LinkInfoString.Write([]byte("\t\t</ul>"))
 	log.Println(pageInfo)
-	pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString)
+	pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
 
 	// Sending data to html.
 	answerPage.Execute(rw, pageInfo)

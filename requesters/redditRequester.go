@@ -55,7 +55,7 @@ func (rr *RedditRequester) SetAvailability(cond bool) {
 func (rr *RedditRequester) GetInfo() (string, string, error) {
 	client := reddit.DefaultClient()
 
-	user, _, err := client.User.Get(context.Background(), "olegsama")
+	user, _, err := client.User.Get(context.Background(), rr.Nickname)
 	if err != nil {
 		return "", "", errors.New("cannot reach user for now")
 	}
