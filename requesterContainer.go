@@ -4,7 +4,6 @@ import (
 	"gotchaPage/requesters"
 	"log"
 	"sort"
-	"sync"
 )
 
 // RequesterAvailability is now unused.
@@ -66,9 +65,19 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 	return pc
 }
 
+// Function getNumberOfAvailableRequesters gets number of available requesters.
+func (rc *RequesterContainer) getNumberOfAvailableRequesters() int {
+	var ans int = 0
+	for _, requester := range rc.Requesters {
+		if requester.IsAvailable() {
+			ans++
+		}
+	}
+	return ans
+}
+
 // GetLink gets all users' with given nickname info from given site.
-func GetLink(requester requesters.Requester, links *[]*UserInfo, wg *sync.WaitGroup, mutex *sync.Mutex) {
-	defer wg.Done()
+func GetLink(requester requesters.Requester, linksChannel chan<- *UserInfo) {
 	// Getting info.
 	link, name, err := requester.GetInfo()
 	var user *UserInfo
@@ -95,30 +104,28 @@ func GetLink(requester requesters.Requester, links *[]*UserInfo, wg *sync.WaitGr
 		}
 	}
 
-	mutex.Lock()
-	*links = append(*links, user)
-	mutex.Unlock()
+	linksChannel <- user
 }
 
 // GetLinks gets all users' with given nickname info from given slice of sites.
 func (rc *RequesterContainer) GetLinks() []*UserInfo {
 	var links []*UserInfo
-	wg := sync.WaitGroup{}
+	var availableRequestersNumber int = rc.getNumberOfAvailableRequesters()
+	linksChannel := make(chan *UserInfo, availableRequestersNumber)
 
-	for _, requesterAvailability := range rc.Requesters {
+	for _, requester := range rc.Requesters {
 		// If requester is not available -> skip.
-		if !requesterAvailability.IsAvailable() {
+		if !requester.IsAvailable() {
 			continue
 		}
 
-		log.Println(requesterAvailability.GetName())
-
-		wg.Add(1)
-		mutex := sync.Mutex{}
-		go GetLink(requesterAvailability, &links, &wg, &mutex)
+		log.Println(requester.GetName())
+		go GetLink(requester, linksChannel)
 	}
 
-	wg.Wait()
+	for i := 0; i < availableRequestersNumber; i++ {
+		links = append(links, <-linksChannel)
+	}
 	sort.Slice(links, func(i int, j int) bool {
 		return links[i].SocialNetwork < links[j].SocialNetwork
 	})
