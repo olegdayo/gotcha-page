@@ -71,29 +71,32 @@ func GetLink(requester requesters.Requester, links *[]*UserInfo, wg *sync.WaitGr
 	defer wg.Done()
 	// Getting info.
 	link, name, err := requester.GetInfo()
+	var user *UserInfo
 
-	mutex.Lock()
 	if err == nil {
 		// Everything is ok, adding.
 		log.Println(requester.GetName() + ": " + link)
-		*links = append(*links, &UserInfo{
+		user = &UserInfo{
 			Nickname:      requester.GetNickname(),
 			SocialNetwork: requester.GetName(),
 			Link:          link,
 			Name:          name,
 			IsAvailable:   true,
-		})
+		}
 	} else {
 		// Error occurred.
 		log.Println(requester.GetName() + ": " + err.Error())
-		*links = append(*links, &UserInfo{
+		user = &UserInfo{
 			Nickname:      requester.GetNickname(),
 			SocialNetwork: requester.GetName(),
 			Link:          err.Error(),
 			Name:          name,
 			IsAvailable:   false,
-		})
+		}
 	}
+
+	mutex.Lock()
+	*links = append(*links, user)
 	mutex.Unlock()
 }
 
