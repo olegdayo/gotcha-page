@@ -6,15 +6,6 @@ import (
 	"sort"
 )
 
-// RequesterAvailability is now unused.
-// RequesterAvailability struct which shows if we will use the requester or not.
-type RequesterAvailability struct {
-	// Requester itself.
-	requester requesters.Requester
-	// Is it available or not.
-	Available bool
-}
-
 // UserInfo is a struct with all user info.
 type UserInfo struct {
 	// User's nickname.
