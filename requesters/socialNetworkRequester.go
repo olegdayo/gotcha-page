@@ -11,51 +11,52 @@ import (
 type SocialNetworkRequester struct {
 	// Social network name.
 	// For github it will be "Github".
-	Name string
+	name string
 	// Home page url without "https://".
 	// For github it will be "github.com".
-	MainURL string
+	mainURL string
 	// User's nickname.
 	// For example, "OFFLUCK".
-	Nickname string
+	nickname string
 	// Requester availability.
-	// If available, it can be used to parse site.
-	Available bool
+	// If selected, it can be used to parse site.
+	selected bool
 }
 
 // NewSocialNetworkRequester is a constructor.
-func NewSocialNetworkRequester(name string, mainURl string, nickname string) *SocialNetworkRequester {
-	snr := new(SocialNetworkRequester)
-	snr.Name = name
-	snr.MainURL = mainURl
-	snr.Nickname = nickname
-	snr.Available = false
+func NewSocialNetworkRequester(name string, mainURL string, nickname string) *SocialNetworkRequester {
+	snr := &SocialNetworkRequester{
+		name:     name,
+		mainURL:  mainURL,
+		nickname: nickname,
+		selected: false,
+	}
 	return snr
 }
 
 // GetName gets name of a social network.
 func (snr *SocialNetworkRequester) GetName() string {
-	return snr.Name
+	return snr.name
 }
 
 // GetNickname gets nickname of a user.
 func (snr *SocialNetworkRequester) GetNickname() string {
-	return snr.Nickname
+	return snr.nickname
 }
 
-// IsAvailable shows if requester is available.
-func (snr *SocialNetworkRequester) IsAvailable() bool {
-	return snr.Available
+// IsSelected shows if requester is available.
+func (snr *SocialNetworkRequester) IsSelected() bool {
+	return snr.selected
 }
 
 // SetAvailability sets availability condition.
 func (snr *SocialNetworkRequester) SetAvailability(cond bool) {
-	snr.Available = cond
+	snr.selected = cond
 }
 
 // GetInfo gets url and name of user by their nickname.
 func (snr *SocialNetworkRequester) GetInfo() (string, string, error) {
-	var link string = fmt.Sprintf("https://%s/", snr.MainURL) + snr.Nickname
+	var link string = fmt.Sprintf("https://%s/", snr.mainURL) + snr.nickname
 
 	// Getting response.
 	page, err := http.Get(link)

@@ -36,7 +36,7 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *H
 	var isChecked string
 	for _, page := range Pages {
 		isChecked = ""
-		if container.Requesters[page.ID].IsAvailable() {
+		if container.Requesters[page.ID].IsSelected() {
 			isChecked = "checked"
 		}
 		pageInfo.CheckBoxInfoString.WriteString(fmt.Sprintf(`

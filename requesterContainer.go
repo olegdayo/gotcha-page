@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gotchaPage/requesters"
 	"log"
 	"sort"
@@ -56,11 +57,11 @@ func NewRequesterContainer(nickname string) *RequesterContainer {
 	return pc
 }
 
-// Function getNumberOfAvailableRequesters gets number of available requesters.
+// Function getNumberOfAvailableRequesters gets number of selected requesters.
 func (rc *RequesterContainer) getNumberOfAvailableRequesters() int {
 	var ans int = 0
 	for _, requester := range rc.Requesters {
-		if requester.IsAvailable() {
+		if requester.IsSelected() {
 			ans++
 		}
 	}
@@ -101,12 +102,12 @@ func GetLink(requester requesters.Requester, linksChannel chan<- *UserInfo) {
 // GetLinks gets all users' with given nickname info from given slice of sites.
 func (rc *RequesterContainer) GetLinks() []*UserInfo {
 	var links []*UserInfo
-	var availableRequestersNumber int = rc.getNumberOfAvailableRequesters()
-	linksChannel := make(chan *UserInfo, availableRequestersNumber)
+	var selectedRequestersNumber int = rc.getNumberOfAvailableRequesters()
+	linksChannel := make(chan *UserInfo, selectedRequestersNumber)
 
 	for _, requester := range rc.Requesters {
 		// If requester is not available -> skip.
-		if !requester.IsAvailable() {
+		if !requester.IsSelected() {
 			continue
 		}
 
@@ -114,9 +115,11 @@ func (rc *RequesterContainer) GetLinks() []*UserInfo {
 		go GetLink(requester, linksChannel)
 	}
 
-	for i := 0; i < availableRequestersNumber; i++ {
+	for i := 0; i < selectedRequestersNumber; i++ {
 		links = append(links, <-linksChannel)
+		fmt.Println(links[i])
 	}
+	close(linksChannel)
 	sort.Slice(links, func(i int, j int) bool {
 		return links[i].SocialNetwork < links[j].SocialNetwork
 	})

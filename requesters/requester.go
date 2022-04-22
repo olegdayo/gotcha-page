@@ -6,8 +6,8 @@ type Requester interface {
 	GetName() string
 	// GetNickname gets nickname of a user.
 	GetNickname() string
-	// IsAvailable shows if requester is available.
-	IsAvailable() bool
+	// IsSelected shows if requester is selected.
+	IsSelected() bool
 	// SetAvailability sets availability condition.
 	SetAvailability(cond bool)
 	// GetInfo gets url and name of user by their nickname.
