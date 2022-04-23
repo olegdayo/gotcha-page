@@ -27,7 +27,7 @@ func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 }
 
 // Adds root, assets and starts the server.
-func runServer(port string) error {
+func runServer(port string) (err error) {
 	mux := http.NewServeMux()
 	var hand *Handler = &Handler{Name: "Handy"}
 
@@ -39,7 +39,7 @@ func runServer(port string) error {
 	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir("scripts"))))
 
 	log.Println("Start")
-	err := http.ListenAndServe(port, mux)
+	err = http.ListenAndServe(port, mux)
 	return err
 }
 

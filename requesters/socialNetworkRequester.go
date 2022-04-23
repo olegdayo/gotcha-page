@@ -24,8 +24,8 @@ type SocialNetworkRequester struct {
 }
 
 // NewSocialNetworkRequester is a constructor.
-func NewSocialNetworkRequester(name string, mainURL string, nickname string) *SocialNetworkRequester {
-	snr := &SocialNetworkRequester{
+func NewSocialNetworkRequester(name string, mainURL string, nickname string) (snr *SocialNetworkRequester) {
+	snr = &SocialNetworkRequester{
 		name:     name,
 		mainURL:  mainURL,
 		nickname: nickname,
@@ -35,17 +35,17 @@ func NewSocialNetworkRequester(name string, mainURL string, nickname string) *So
 }
 
 // GetName gets name of a social network.
-func (snr *SocialNetworkRequester) GetName() string {
+func (snr *SocialNetworkRequester) GetName() (name string) {
 	return snr.name
 }
 
 // GetNickname gets nickname of a user.
-func (snr *SocialNetworkRequester) GetNickname() string {
+func (snr *SocialNetworkRequester) GetNickname() (nickname string) {
 	return snr.nickname
 }
 
 // IsSelected shows if requester is available.
-func (snr *SocialNetworkRequester) IsSelected() bool {
+func (snr *SocialNetworkRequester) IsSelected() (selected bool) {
 	return snr.selected
 }
 
@@ -55,7 +55,7 @@ func (snr *SocialNetworkRequester) SetAvailability(cond bool) {
 }
 
 // GetInfo gets url and name of user by their nickname.
-func (snr *SocialNetworkRequester) GetInfo() (string, string, error) {
+func (snr *SocialNetworkRequester) GetInfo() (url string, name string, err error) {
 	var link string = fmt.Sprintf("https://%s/", snr.mainURL) + snr.nickname
 
 	// Getting response.

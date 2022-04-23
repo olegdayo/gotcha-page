@@ -48,24 +48,24 @@ var Pages []*Page = []*Page{
 
 // NewRequesterContainer initializes all requesters we have.
 // NewRequesterContainer sets requesters availability to false statement.
-func NewRequesterContainer(nickname string) *RequesterContainer {
-	pc := new(RequesterContainer)
-	pc.Requesters = make(map[string]requesters.Requester)
+func NewRequesterContainer(nickname string) (rc *RequesterContainer) {
+	rc = new(RequesterContainer)
+	rc.Requesters = make(map[string]requesters.Requester)
 	for _, page := range Pages {
-		pc.Requesters[page.ID] = requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname)
+		rc.Requesters[page.ID] = requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname)
 	}
-	return pc
+	return rc
 }
 
 // Function getNumberOfAvailableRequesters gets number of selected requesters.
-func (rc *RequesterContainer) getNumberOfAvailableRequesters() int {
-	var ans int = 0
+func (rc *RequesterContainer) getNumberOfAvailableRequesters() (number int) {
+	number = 0
 	for _, requester := range rc.Requesters {
 		if requester.IsSelected() {
-			ans++
+			number++
 		}
 	}
-	return ans
+	return number
 }
 
 // GetLink gets all users' with given nickname info from given site.
@@ -100,8 +100,7 @@ func GetLink(requester requesters.Requester, linksChannel chan<- *UserInfo) {
 }
 
 // GetLinks gets all users' with given nickname info from given slice of sites.
-func (rc *RequesterContainer) GetLinks() []*UserInfo {
-	var links []*UserInfo
+func (rc *RequesterContainer) GetLinks() (links []*UserInfo) {
 	var selectedRequestersNumber int = rc.getNumberOfAvailableRequesters()
 	linksChannel := make(chan *UserInfo, selectedRequestersNumber)
 

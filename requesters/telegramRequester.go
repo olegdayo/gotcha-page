@@ -1,13 +1,5 @@
 package requesters
 
-import (
-	"errors"
-	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"net/http"
-	"strings"
-)
-
 type TelegramRequester struct {
 	// Home page url without "https://".
 	mainURL string
@@ -20,9 +12,9 @@ type TelegramRequester struct {
 }
 
 // NewTelegramRequester is a constructor.
-func NewTelegramRequester(mainURL string, nickname string) *TelegramRequester {
-	tr := &TelegramRequester{
-		mainURL:  mainURL,
+func NewTelegramRequester(nickname string) (tr *TelegramRequester) {
+	tr = &TelegramRequester{
+		mainURL:  "",
 		nickname: nickname,
 		selected: false,
 	}
@@ -30,17 +22,17 @@ func NewTelegramRequester(mainURL string, nickname string) *TelegramRequester {
 }
 
 // GetName gets name of a telegram.
-func (tr *TelegramRequester) GetName() string {
+func (tr *TelegramRequester) GetName() (name string) {
 	return "Telegram"
 }
 
 // GetNickname gets nickname of a user.
-func (tr *TelegramRequester) GetNickname() string {
+func (tr *TelegramRequester) GetNickname() (nickname string) {
 	return tr.nickname
 }
 
 // IsSelected shows if requester is available.
-func (tr *TelegramRequester) IsSelected() bool {
+func (tr *TelegramRequester) IsSelected() (selected bool) {
 	return tr.selected
 }
 
@@ -50,33 +42,6 @@ func (tr *TelegramRequester) SetAvailability(cond bool) {
 }
 
 // GetInfo gets url and name of user by their nickname.
-func (tr *TelegramRequester) GetInfo() (string, string, error) {
-	var link string = fmt.Sprintf("https://%s/", tr.mainURL) + tr.nickname
-
-	// Getting response.
-	page, err := http.Get(link)
-	if err != nil {
-		return "", "", err
-	}
-
-	// Closing response before leaving the function.
-	defer page.Body.Close()
-
-	if page.StatusCode == 404 {
-		// Page not found.
-		return "page not found", "", errors.New("page not found")
-	} else if page.StatusCode != 200 {
-		// Some other error.
-		// For example, 403 forbidden.
-		return "", "", errors.New(fmt.Sprintf("status code is %d", page.StatusCode))
-	}
-
-	// Getting goquery document.
-	info, err := goquery.NewDocumentFromReader(page.Body)
-	if err != nil {
-		return "", "", err
-	}
-
-	// The link is ok -> sending it and getting user's name from <title> tag.
-	return strings.TrimSpace(link), strings.TrimSpace(info.Find("title").Text()), nil
+func (tr *TelegramRequester) GetInfo() (url string, name string, err error) {
+	return "", "", nil
 }

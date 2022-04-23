@@ -31,8 +31,8 @@ func page(rw http.ResponseWriter, r *http.Request) {
 }
 
 // Adds check boxes and nickname value in text input field on page.
-func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) *HTMLInfo {
-	var pageInfo *HTMLInfo = new(HTMLInfo)
+func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) (pageInfo *HTMLInfo) {
+	pageInfo = new(HTMLInfo)
 	var isChecked string
 	for _, page := range Pages {
 		isChecked = ""
