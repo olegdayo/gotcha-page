@@ -4,13 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"io"
+	"log"
 	"net/http"
 	"strings"
 )
 
 type SocialNetworkRequester struct {
 	// Social network name.
-	// For github it will be "Github".
+	// For github it will be "GitHub".
 	name string
 	// Home page url without "https://".
 	// For github it will be "github.com".
@@ -65,7 +67,12 @@ func (snr *SocialNetworkRequester) GetInfo() (url string, name string, err error
 	}
 
 	// Closing response before leaving the function.
-	defer page.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(page.Body)
 
 	if page.StatusCode == 404 {
 		// Page not found.

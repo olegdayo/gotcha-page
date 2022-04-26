@@ -10,12 +10,15 @@ import (
 
 // HTMLInfo contains all page info.
 type HTMLInfo struct {
+	// Nickname and text field info.
 	NicknameInfo       template.HTML
 	NicknameInfoString strings.Builder
+	// Checkbox info.
 	CheckBoxInfo       template.HTML
 	CheckBoxInfoString strings.Builder
-	LinkInfo           template.HTML
-	LinkInfoString     strings.Builder
+	// Links info.
+	LinkInfo       template.HTML
+	LinkInfoString strings.Builder
 }
 
 // Builds page.
@@ -27,7 +30,11 @@ func page(rw http.ResponseWriter, r *http.Request) {
 
 	var formPage *template.Template = template.Must(template.ParseFiles("templates/page.html"))
 	pageInfo := addCheckBoxesAndNickname(NewRequesterContainer(""), "")
-	formPage.Execute(rw, pageInfo)
+	err := formPage.Execute(rw, pageInfo)
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
 }
 
 // Adds check boxes and nickname value in text input field on page.
@@ -54,7 +61,7 @@ func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) (p
 
 // Checking which textboxes are set.
 func setUsedLinks(r *http.Request, container *RequesterContainer) {
-	for key, _ := range r.Form {
+	for key := range r.Form {
 		if _, ok := container.Requesters[key]; ok {
 			container.Requesters[key].SetAvailability(true)
 			fmt.Println("OK")
@@ -66,7 +73,11 @@ func setUsedLinks(r *http.Request, container *RequesterContainer) {
 func addAnswers(rw http.ResponseWriter, r *http.Request) {
 	var answerPage *template.Template = template.Must(template.ParseFiles("templates/page.html"))
 
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		log.Fatalln(err)
+		return
+	}
 	nick := r.FormValue("nickname")
 	log.Println(r.Form)
 
@@ -84,7 +95,11 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 		pageInfo.LinkInfoString.WriteString("<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n")
 		log.Println(pageInfo)
 		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
-		answerPage.Execute(rw, pageInfo)
+		err := answerPage.Execute(rw, pageInfo)
+		if err != nil {
+			log.Fatalln(err)
+			return
+		}
 		log.Println(answerPage)
 		return
 	}
@@ -94,7 +109,10 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 		pageInfo.LinkInfoString.WriteString("<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n")
 		log.Println(pageInfo)
 		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
-		answerPage.Execute(rw, pageInfo)
+		err := answerPage.Execute(rw, pageInfo)
+		if err != nil {
+			log.Fatalln(err)
+		}
 		log.Println(answerPage)
 		return
 	}
@@ -118,6 +136,9 @@ func addAnswers(rw http.ResponseWriter, r *http.Request) {
 	pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
 
 	// Sending data to html.
-	answerPage.Execute(rw, pageInfo)
+	err = answerPage.Execute(rw, pageInfo)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	log.Println(answerPage)
 }

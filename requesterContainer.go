@@ -38,12 +38,36 @@ type Page struct {
 }
 
 var Pages []*Page = []*Page{
-	{"facebook", "Facebook", "facebook.com"},
-	{"github", "Github", "github.com"},
-	{"gitlab", "Gitlab", "gitlab.com"},
-	{"instagram", "Instagram", "instagram.com"},
-	{"vk", "VK", "vk.com"},
-	{"youtube", "Youtube", "youtube.com/c"},
+	{
+		ID:   "facebook",
+		Name: "Facebook",
+		URL:  "facebook.com",
+	},
+	{
+		ID:   "github",
+		Name: "GitHub",
+		URL:  "github.com",
+	},
+	{
+		ID:   "gitlab",
+		Name: "GitLab",
+		URL:  "gitlab.com",
+	},
+	{
+		ID:   "instagram",
+		Name: "Instagram",
+		URL:  "instagram.com",
+	},
+	{
+		ID:   "vk",
+		Name: "VK",
+		URL:  "vk.com",
+	},
+	{
+		ID:   "youtube",
+		Name: "Youtube",
+		URL:  "youtube.com/c",
+	},
 }
 
 // NewRequesterContainer initializes all requesters we have.
@@ -121,8 +145,11 @@ func (rc *RequesterContainer) GetLinks() (links []*UserInfo) {
 	}
 	close(linksChannel)
 
-	sort.Slice(links, func(i int, j int) bool {
-		return links[i].SocialNetwork < links[j].SocialNetwork
-	})
+	sort.Slice(
+		links,
+		func(i int, j int) bool {
+			return links[i].SocialNetwork < links[j].SocialNetwork
+		},
+	)
 	return links
 }
