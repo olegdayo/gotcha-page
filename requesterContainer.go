@@ -114,11 +114,13 @@ func (rc *RequesterContainer) GetLinks() (links []*UserInfo) {
 		go GetLink(requester, linksChannel)
 	}
 
+	links = make([]*UserInfo, selectedRequestersNumber)
 	for i := 0; i < selectedRequestersNumber; i++ {
-		links = append(links, <-linksChannel)
+		links[i] = <-linksChannel
 		fmt.Println(links[i])
 	}
 	close(linksChannel)
+
 	sort.Slice(links, func(i int, j int) bool {
 		return links[i].SocialNetwork < links[j].SocialNetwork
 	})
