@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	templatesPath string = "src/templates"
-	assetsPath    string = "src/assets"
-	scriptsPath   string = "src/scripts"
+	templatesPath string = "templates"
+	assetsPath    string = "assets"
+	scriptsPath   string = "scripts"
 
-	pageTemplatePath string = "src/templates/page.html"
+	pageTemplatePath string = "templates/page.html"
 )
 
 var port string
