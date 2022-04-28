@@ -1,7 +1,6 @@
 FROM golang:latest
 
-RUN mkdir src/app
-WORKDIR /src/app
+WORKDIR /app
 COPY . .
-RUN go build -o gotchaPage gotchaPage
+RUN go build -o gotchaPage src/*.go
 CMD ["./gotchaPage"]

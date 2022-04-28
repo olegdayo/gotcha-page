@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gotchaPage/requesters"
+	"gotchaPage/src/requesters"
 	"log"
 	"sort"
 )
