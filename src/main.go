@@ -7,11 +7,15 @@ import (
 	"runtime"
 )
 
+// Paths.
 const (
 	templatesPath string = "templates"
-	assetsPath    string = "assets"
-	scriptsPath   string = "scripts"
+	// To .css files.
+	assetsPath string = "assets"
+	// To .js files.
+	scriptsPath string = "scripts"
 
+	// To .html templates.
 	pageTemplatePath string = "templates/page.html"
 )
 
