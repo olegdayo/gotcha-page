@@ -258,7 +258,7 @@ func TestGetInfo(t *testing.T) {
 				"olegsama",
 			),
 			"https://vk.com/olegsama",
-			"Олег Сидоренков | ВКонтакте",
+			"Oleg Sidorenkov | VK",
 		},
 		{
 			requesters.NewSocialNetworkRequester(
