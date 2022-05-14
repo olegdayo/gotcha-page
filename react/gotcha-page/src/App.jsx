@@ -9,8 +9,6 @@ function App() {
   }
   return (
       <>
-        {nicknameInputVal}
-        <br/>
         <input value={nicknameInputVal} onChange={onInput}/>
       </>
   );

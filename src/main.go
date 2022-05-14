@@ -9,15 +9,10 @@ import (
 
 // Paths.
 const (
-	// To .html files.
-	templatesPath string = "templates"
 	// To .css files.
 	assetsPath string = "assets"
 	// To .js files.
 	scriptsPath string = "scripts"
-
-	// To main template.
-	pageTemplatePath string = "templates/page.html"
 )
 
 var port string
