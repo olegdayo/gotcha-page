@@ -40,6 +40,7 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 func setUsedLinks(info *Info, container *RequesterContainer) {
 	for _, parser := range info.Parsers {
 		if _, ok := container.Requesters[parser]; ok {
+			fmt.Println(parser)
 			container.Requesters[parser].SetAvailability(true)
 		}
 	}
