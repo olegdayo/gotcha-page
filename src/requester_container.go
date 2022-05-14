@@ -10,17 +10,17 @@ import (
 // UserInfo is a struct with all user info.
 type UserInfo struct {
 	// User's nickname.
-	Nickname string
+	Nickname string `json:"nickname"`
 	// Social network name.
-	SocialNetwork string
+	SocialNetwork string `json:"social-network"`
 	// User's profile link.
-	Link string
+	Link string `json:"link"`
 	// User's name from <title> tag.
-	Name string
+	Name string `json:"name"`
 	// User availability.
 	// True if everything is ok.
 	// False if during parsing an error occurred.
-	IsAvailable bool
+	IsAvailable bool `json:"is-available"`
 }
 
 // RequesterContainer is a container of requesters.

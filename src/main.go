@@ -36,7 +36,7 @@ func configs() {
 
 // ServeHTTP is Handler's main function.
 func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	page(rw, r)
+	relation(rw, r)
 }
 
 // Adds root, assets and starts the server.

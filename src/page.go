@@ -1,144 +1,70 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 )
 
-// HTMLInfo contains all page info.
-type HTMLInfo struct {
-	// Nickname and text field info.
-	NicknameInfo       template.HTML
-	NicknameInfoString strings.Builder
-	// Checkbox info.
-	CheckBoxInfo       template.HTML
-	CheckBoxInfoString strings.Builder
-	// Links info.
-	LinkInfo       template.HTML
-	LinkInfoString strings.Builder
+type Info struct {
+	Nickname string   `json:"nickname"`
+	Parsers  []string `json:"parsers"`
 }
 
-// Builds page.
-func page(rw http.ResponseWriter, r *http.Request) {
+func relation(rw http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		addAnswers(rw, r)
-		return
-	}
-
-	var formPage *template.Template = template.Must(template.ParseFiles(pageTemplatePath))
-	pageInfo := addCheckBoxesAndNickname(NewRequesterContainer(""), "")
-	err := formPage.Execute(rw, pageInfo)
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
-}
-
-// Adds check boxes and nickname value in text input field on page.
-func addCheckBoxesAndNickname(container *RequesterContainer, nickname string) (pageInfo *HTMLInfo) {
-	pageInfo = new(HTMLInfo)
-	var isChecked string
-	for _, page := range Pages {
-		isChecked = ""
-		if container.Requesters[page.ID].IsSelected() {
-			isChecked = "checked"
+		buf, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			log.Fatalln("Reading error")
+			return
 		}
-		pageInfo.CheckBoxInfoString.WriteString(fmt.Sprintf(`
-            <li>
-                <label for="%s">%s</label>
-                <input type="checkbox" name="%s" id="%s"%s/>
-            </li>
-		`, page.ID, page.Name, page.ID, page.ID, isChecked))
+
+		ans, err := getAns(buf)
+		fmt.Println(ans)
+
+		if err != nil {
+			log.Fatalln("Getting answers error")
+			return
+		}
+
+		_, err = rw.Write(ans)
+		if err != nil {
+			log.Fatalln("Write error")
+		}
 	}
-	log.Println(pageInfo)
-	pageInfo.CheckBoxInfo = template.HTML(pageInfo.CheckBoxInfoString.String())
-	pageInfo.NicknameInfo = template.HTML(nickname)
-	return pageInfo
 }
 
-// Checking which textboxes are set.
-func setUsedLinks(r *http.Request, container *RequesterContainer) {
-	for key := range r.Form {
-		if _, ok := container.Requesters[key]; ok {
-			container.Requesters[key].SetAvailability(true)
-			fmt.Println("OK")
+// Checking which checkboxes are set.
+func setUsedLinks(info *Info, container *RequesterContainer) {
+	for _, parser := range info.Parsers {
+		if _, ok := container.Requesters[parser]; ok {
+			container.Requesters[parser].SetAvailability(true)
 		}
 	}
 }
 
 // Adds answers to page.
-func addAnswers(rw http.ResponseWriter, r *http.Request) {
-	var answerPage *template.Template = template.Must(template.ParseFiles(pageTemplatePath))
-
-	err := r.ParseForm()
+func getAns(buf []byte) (ans []byte, err error) {
+	var info *Info = new(Info)
+	log.Println(string(buf))
+	err = json.Unmarshal(buf, info)
 	if err != nil {
-		log.Fatalln(err)
-		return
+		log.Println("Unmarshal error")
+		return nil, err
 	}
-	nick := r.FormValue("nickname")
-	log.Println(r.Form)
 
 	// Container initialization and execution.
-	container := NewRequesterContainer(nick)
-	setUsedLinks(r, container)
+	container := NewRequesterContainer(info.Nickname)
+	setUsedLinks(info, container)
+
 	users := container.GetLinks()
-	log.Println(users)
-
-	// Setting page and getting all the info about it.
-	pageInfo := addCheckBoxesAndNickname(container, nick)
-
-	// Checking if nickname is ok.
-	if nick == "" {
-		pageInfo.LinkInfoString.WriteString("<h3>Looks like the nickname is invalid...</h3>\n\t\t<ul>\n")
-		log.Println(pageInfo)
-		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
-		err := answerPage.Execute(rw, pageInfo)
-		if err != nil {
-			log.Fatalln(err)
-			return
-		}
-		log.Println(answerPage)
-		return
-	}
-
-	// Checking if any sites are set.
-	if len(users) == 0 {
-		pageInfo.LinkInfoString.WriteString("<h3>Looks like you didn't select any pages...</h3>\n\t\t<ul>\n")
-		log.Println(pageInfo)
-		pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
-		err := answerPage.Execute(rw, pageInfo)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		log.Println(answerPage)
-		return
-	}
-
-	// Filling page info.
-	pageInfo.LinkInfoString.WriteString(fmt.Sprintf("<h3>Results for nickname \"%s\":</h3>\n\t\t<ul>\n", nick))
-	for _, user := range users {
-		if user.IsAvailable {
-			pageInfo.LinkInfoString.WriteString(
-				fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\" href=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n",
-					user.SocialNetwork, user.Link, user.SocialNetwork, user.Name,
-				))
-		} else {
-			pageInfo.LinkInfoString.WriteString(
-				fmt.Sprintf("\t\t\t<li>\n\t\t\t\t<a name=\"%s\">%s: %s</a>\n\t\t\t</li>\t\n",
-					user.SocialNetwork, user.SocialNetwork, user.Link))
-		}
-	}
-	pageInfo.LinkInfoString.WriteString("\t\t</ul>")
-	log.Println(pageInfo)
-	pageInfo.LinkInfo = template.HTML(pageInfo.LinkInfoString.String())
-
-	// Sending data to html.
-	err = answerPage.Execute(rw, pageInfo)
+	ans, err = json.Marshal(users)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("Marshal error")
+		return nil, err
 	}
-	log.Println(answerPage)
+
+	return ans, nil
 }
