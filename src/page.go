@@ -14,36 +14,43 @@ type Info struct {
 }
 
 func relation(rw http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		buf, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			log.Fatalln("Reading error")
-			return
+	switch r.Method {
+	case http.MethodGet:
+		{
+			links, err := getPages()
+			if err != nil {
+				log.Fatalln("Get pages info")
+				return
+			}
+
+			_, err = rw.Write(links)
+			if err != nil {
+				log.Fatalln("Write error")
+			}
 		}
 
-		ans, err := getLinks(buf)
-		fmt.Println(ans)
+	case http.MethodPost:
+		{
+			buf, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				log.Fatalln("Reading error")
+				return
+			}
 
-		if err != nil {
-			log.Fatalln("Getting answers error")
-			return
-		}
+			ans, err := getLinks(buf)
+			fmt.Println(ans)
 
-		_, err = rw.Write(ans)
-		if err != nil {
-			log.Fatalln("Write error")
-		}
-	} else if r.Method == http.MethodGet {
-		links, err := getPages()
-		if err != nil {
-			log.Fatalln("Get pages info")
-			return
-		}
+			if err != nil {
+				log.Fatalln("Getting answers error")
+				return
+			}
 
-		_, err = rw.Write(links)
-		if err != nil {
-			log.Fatalln("Write error")
+			_, err = rw.Write(ans)
+			if err != nil {
+				log.Fatalln("Write error")
+			}
 		}
+	default:
 	}
 }
 
