@@ -13,9 +13,9 @@ type Info struct {
 	Parsers  []string `json:"parsers"`
 }
 
-func relation(rw http.ResponseWriter, r *http.Request) {
+func requests(rw http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case http.MethodGet:
+	case http.MethodGet: // Getting info about all pages (for checkboxes).
 		{
 			links, err := getPages()
 			if err != nil {
@@ -29,7 +29,7 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-	case http.MethodPost:
+	case http.MethodPost: // Sending info about requested users.
 		{
 			buf, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -37,7 +37,7 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			ans, err := getLinks(buf)
+			ans, err := getUsers(buf)
 			fmt.Println(ans)
 
 			if err != nil {
@@ -54,7 +54,7 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Adds answers to page.
+// Returns info about all pages available.
 func getPages() (pages []byte, err error) {
 	pages, err = json.Marshal(Pages)
 	if err != nil {
@@ -73,8 +73,8 @@ func setUsedLinks(info *Info, container *RequesterContainer) {
 	}
 }
 
-// Adds answers to page.
-func getLinks(selected []byte) (links []byte, err error) {
+// Returns info about all users.
+func getUsers(selected []byte) (links []byte, err error) {
 	var info *Info = new(Info)
 	log.Println(string(selected))
 	err = json.Unmarshal(selected, info)
