@@ -21,7 +21,7 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		ans, err := getAns(buf)
+		ans, err := getLinks(buf)
 		fmt.Println(ans)
 
 		if err != nil {
@@ -33,7 +33,27 @@ func relation(rw http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatalln("Write error")
 		}
+	} else if r.Method == http.MethodGet {
+		links, err := getPages()
+		if err != nil {
+			log.Fatalln("Get pages info")
+			return
+		}
+
+		_, err = rw.Write(links)
+		if err != nil {
+			log.Fatalln("Write error")
+		}
 	}
+}
+
+// Adds answers to page.
+func getPages() (pages []byte, err error) {
+	pages, err = json.Marshal(Pages)
+	if err != nil {
+		return nil, err
+	}
+	return pages, nil
 }
 
 // Checking which checkboxes are set.
@@ -47,10 +67,10 @@ func setUsedLinks(info *Info, container *RequesterContainer) {
 }
 
 // Adds answers to page.
-func getAns(buf []byte) (ans []byte, err error) {
+func getLinks(selected []byte) (links []byte, err error) {
 	var info *Info = new(Info)
-	log.Println(string(buf))
-	err = json.Unmarshal(buf, info)
+	log.Println(string(selected))
+	err = json.Unmarshal(selected, info)
 	if err != nil {
 		log.Println("Unmarshal error")
 		return nil, err
@@ -61,11 +81,11 @@ func getAns(buf []byte) (ans []byte, err error) {
 	setUsedLinks(info, container)
 
 	users := container.GetLinks()
-	ans, err = json.Marshal(users)
+	links, err = json.Marshal(users)
 	if err != nil {
 		log.Fatalln("Marshal error")
 		return nil, err
 	}
 
-	return ans, nil
+	return links, nil
 }

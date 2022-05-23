@@ -32,9 +32,9 @@ type RequesterContainer struct {
 }
 
 type Page struct {
-	ID   string
-	Name string
-	URL  string
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
 var Pages []*Page = []*Page{
