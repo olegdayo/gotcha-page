@@ -27,6 +27,7 @@ func requests(rw http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Fatalln("Write error")
 			}
+			log.Println("Successfully sent data!")
 		}
 
 	case http.MethodPost: // Sending info about requested users.
@@ -49,6 +50,8 @@ func requests(rw http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				log.Fatalln("Write error")
 			}
+
+			log.Println("Successfully got data!")
 		}
 	default:
 	}
