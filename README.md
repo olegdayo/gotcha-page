@@ -4,5 +4,7 @@
 ![Windows](https://github.com/OFFLUCK/gotcha-page/actions/workflows/windows.yml/badge.svg)
 #### Currently in Alpha version, you can check it out [here](https://gotcha-page.herokuapp.com)!
 
+$\color{red}{Warning:\ can\ be\ loading\ for\ quite\ a\ time!}$
+
 ### About
 "GotchaPage" is a web application which allows to get list of pages with the given nickname from different social networks.
