@@ -29,8 +29,14 @@ func configs() {
 	port = os.Getenv("PORT")
 }
 
+func enableCORS(rw http.ResponseWriter) {
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	rw.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+}
+
 // ServeHTTP is Handler's main function.
 func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	enableCORS(rw)
 	requests(rw, r)
 }
 
