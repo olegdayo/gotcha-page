@@ -1,18 +1,18 @@
 import './CheckBoxes.css';
 import axios from 'axios';
+import {useEffect, useState} from "react";
 
-async function CheckBoxes() {
-    let response;
-    response = await axios.get("http://localhost:8080")
-        .catch(function (error) {
-            console.error(error);
-        });
-    console.log(response);
-    console.log(response.data);
-    let checkboxes = response.data;
-    console.log(checkboxes);
+function CheckBoxes() {
+    const [checkboxes, setCheckboxes] = useState();
+    useEffect(() => {
+        axios.get("http://localhost:8080")
+            .then((resp) => {
+                setCheckboxes(resp.data);
+            });
+    }, []);
     return (
         <>
+            {JSON.stringify(checkboxes)}
         </>
     );
 }
