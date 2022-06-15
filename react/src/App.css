@@ -44,3 +44,7 @@ h3 {
     color: darkblue;
     list-style-type: none;
 }
+
+ul {
+    list-style-type: none;
+}
