@@ -28,7 +28,7 @@ func page(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var formPage *template.Template = template.Must(template.ParseFiles(pageTemplatePath))
+	var formPage *template.Template = template.Must(template.ParseFiles(conf.Paths.MainTemplate))
 	pageInfo := addCheckBoxesAndNickname(NewRequesterContainer(""), "")
 	err := formPage.Execute(rw, pageInfo)
 	if err != nil {
@@ -71,7 +71,7 @@ func setUsedLinks(r *http.Request, container *RequesterContainer) {
 
 // Adds answers to page.
 func addAnswers(rw http.ResponseWriter, r *http.Request) {
-	var answerPage *template.Template = template.Must(template.ParseFiles(pageTemplatePath))
+	var answerPage *template.Template = template.Must(template.ParseFiles(conf.Paths.MainTemplate))
 
 	err := r.ParseForm()
 	if err != nil {
