@@ -32,14 +32,13 @@ func requests(rw http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost: // Sending info about requested users.
 		{
-			buf, err := ioutil.ReadAll(r.Body)
+			info, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				log.Fatalln("Reading error")
 				return
 			}
 
-			ans, err := getUsers(buf)
-			fmt.Println(ans)
+			ans, err := getUsers(info)
 
 			if err != nil {
 				log.Fatalln("Getting answers error")

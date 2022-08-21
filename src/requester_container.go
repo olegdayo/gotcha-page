@@ -12,7 +12,7 @@ type UserInfo struct {
 	// User's nickname.
 	Nickname string `json:"nickname"`
 	// Social network name.
-	SocialNetwork string `json:"social-network"`
+	SocialNetwork string `json:"url"`
 	// User's profile link.
 	Link string `json:"link"`
 	// User's name from <title> tag.
@@ -20,7 +20,7 @@ type UserInfo struct {
 	// User availability.
 	// True if everything is ok.
 	// False if during parsing an error occurred.
-	IsAvailable bool `json:"is-available"`
+	IsAvailable bool `json:"available"`
 }
 
 // RequesterContainer is a container of requesters.
@@ -114,8 +114,8 @@ func GetLink(requester requesters.Requester, linksChannel chan<- *UserInfo) {
 		user = &UserInfo{
 			Nickname:      requester.GetNickname(),
 			SocialNetwork: requester.GetName(),
-			Link:          err.Error(),
-			Name:          name,
+			Link:          link,
+			Name:          fmt.Sprintf("%s: %s not found", requester.GetName(), requester.GetNickname()),
 			IsAvailable:   false,
 		}
 	}
