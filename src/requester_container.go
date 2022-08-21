@@ -141,7 +141,7 @@ func (rc *RequesterContainer) GetLinks() (links []*UserInfo) {
 	links = make([]*UserInfo, selectedRequestersNumber)
 	for i := 0; i < selectedRequestersNumber; i++ {
 		links[i] = <-linksChannel
-		fmt.Println(links[i])
+		log.Println(links[i])
 	}
 	close(linksChannel)
 

@@ -1,32 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"runtime"
 )
 
-// Paths.
-const (
-	// To .css files.
-	assetsPath string = "assets"
-	// To .js files.
-	scriptsPath string = "scripts"
-)
-
-var port string
+var conf *Config
 
 // Handler struct is a custom handler.
 type Handler struct {
 	http.Handler
 	Name string
-}
-
-// Setting configurations.
-func configs() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	port = os.Getenv("PORT")
 }
 
 func enableCORS(rw http.ResponseWriter) {
@@ -48,9 +33,9 @@ func runServer(port string) (err error) {
 	// Adding root.
 	mux.Handle("/", hand)
 	// Adding CSS files.
-	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assetsPath))))
+	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(conf.AssetsPath))))
 	// Adding JS files
-	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir(scriptsPath))))
+	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir(conf.ScriptsPath))))
 
 	log.Println("Start")
 	err = http.ListenAndServe(port, mux)
@@ -59,11 +44,17 @@ func runServer(port string) (err error) {
 
 // Here we start.
 func main() {
-	configs()
-	if port == "" {
-		port = "8080"
+	conf = new(Config)
+	err := conf.Init()
+	if err != nil {
+		panic(err)
 	}
-	err := runServer(":" + port)
+
+	log.Println(conf.AssetsPath)
+	log.Println(conf.ScriptsPath)
+	log.Println(conf.Port)
+
+	err = runServer(fmt.Sprintf(":%d", conf.Port))
 	if err != nil {
 		panic(err)
 	}

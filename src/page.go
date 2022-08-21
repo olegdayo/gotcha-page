@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -69,7 +68,7 @@ func getPages() (pages []byte, err error) {
 func setUsedLinks(info *Info, container *RequesterContainer) {
 	for _, parser := range info.Parsers {
 		if _, ok := container.Requesters[parser]; ok {
-			fmt.Println(parser)
+			log.Println(parser)
 			container.Requesters[parser].SetAvailability(true)
 		}
 	}
