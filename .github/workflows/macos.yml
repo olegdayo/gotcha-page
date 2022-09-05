@@ -19,9 +19,9 @@ jobs:
           go-version: 1.18
 
       - name: Build
-        run: go build *.go
+        run: go build .
         working-directory: backend
 
       - name: Test
-        run: go test requesters/tests/*.go
+        run: go test requesters/tests
         working-directory: backend
