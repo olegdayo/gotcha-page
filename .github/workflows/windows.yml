@@ -20,6 +20,8 @@ jobs:
 
       - name: Build
         run: go build ./backend
+        working-directory: backend
 
       - name: Test
         run: go test ./backend/requesters/tests
+        working-directory: backend
