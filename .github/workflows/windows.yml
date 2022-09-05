@@ -23,5 +23,5 @@ jobs:
         working-directory: backend
 
       - name: Test
-        run: go test /requesters/tests/
-        working-directory: backend
+        run: go test .
+        working-directory: backend/requesters/tests
