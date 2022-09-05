@@ -9,7 +9,7 @@ function App() {
     useEffect(() => {
         axios.get("http://localhost:8080")
             .then((resp) => {
-                setCheckboxes(resp.data);
+                setCheckboxes(resp.data.networks);
             })
             .catch((err) => {
                 console.log(err)
@@ -56,7 +56,7 @@ function App() {
                 <label>
                     Nickname:
                 </label>
-                <input value={nickname} onChange={(event) => { setNickname(event.target.value) }} type="text" name="nickname" />
+                <input value={nickname} onChange={(event) => { setNickname(event.target.value) }} type="text" name="nickname"/>
                 <br />
                 <button onClick={postRequest}>Get pages!</button>
             </div>
@@ -64,13 +64,13 @@ function App() {
             <div className="checks">
                 <ul>
                     <li>
-                        <label form={"all"}>{"Select all"}</label>
                         <input onChange={changeAll} type="checkbox" name="all" id="all" />
+                        <label form={"all"}>{"Select all"}</label>
                     </li>
                     {checkboxes.map(
                         (x, k) => <li key={k}>
+                            <input onChange={change} type="checkbox" name={x.id} id={x.id} checked={x.value}/>
                             <label form={x.id}>{x.name}</label>
-                            <input onChange={change} type="checkbox" name={x.id} id={x.id} checked={x.value} />
                         </li>
                     )}
                 </ul>
@@ -88,7 +88,7 @@ function App() {
                                         </li>
                             }
                             return  <li key={k}>
-                                        <p name={x.url}>{x.name}</p>
+                                        <a>{x.name}</a>
                                     </li>
                         }
                     )}

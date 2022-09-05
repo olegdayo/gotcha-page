@@ -1,3 +1,28 @@
 assets-path: assets
 scripts-path: scripts
 port: 8080
+
+networks:
+  - id: facebook
+    name: Facebook
+    url: facebook.com
+
+  - id: github
+    name: Github
+    url: github.com
+
+  - id: gitlab
+    name: Gitlab
+    url: gitlab.com
+
+  - id: instagram
+    name: Instagram
+    url: instagram.com
+
+  - id: vk
+    name: VK
+    url: vk.com
+
+  - id: youtube
+    name: Youtube
+    url: youtube.com/c

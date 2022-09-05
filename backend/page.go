@@ -16,7 +16,7 @@ func requests(rw http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet: // Getting info about all pages (for checkboxes).
 		{
-			links, err := getPages()
+			links, err := json.Marshal(conf)
 			if err != nil {
 				log.Fatalln("Get pages info")
 				return
@@ -53,15 +53,6 @@ func requests(rw http.ResponseWriter, r *http.Request) {
 		}
 	default:
 	}
-}
-
-// Returns info about all pages available.
-func getPages() (pages []byte, err error) {
-	pages, err = json.Marshal(Pages)
-	if err != nil {
-		return nil, err
-	}
-	return pages, nil
 }
 
 // Checking which checkboxes are set.

@@ -31,52 +31,13 @@ type RequesterContainer struct {
 	Requesters map[string]requesters.Requester
 }
 
-type Page struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	URL  string `json:"url"`
-}
-
-var Pages []*Page = []*Page{
-	{
-		ID:   "facebook",
-		Name: "Facebook",
-		URL:  "facebook.com",
-	},
-	{
-		ID:   "github",
-		Name: "GitHub",
-		URL:  "github.com",
-	},
-	{
-		ID:   "gitlab",
-		Name: "GitLab",
-		URL:  "gitlab.com",
-	},
-	{
-		ID:   "instagram",
-		Name: "Instagram",
-		URL:  "instagram.com",
-	},
-	{
-		ID:   "vk",
-		Name: "VK",
-		URL:  "vk.com",
-	},
-	{
-		ID:   "youtube",
-		Name: "Youtube",
-		URL:  "youtube.com/c",
-	},
-}
-
 // NewRequesterContainer initializes all requesters we have.
 // NewRequesterContainer sets requesters availability to false statement.
 func NewRequesterContainer(nickname string) (rc *RequesterContainer) {
 	rc = new(RequesterContainer)
 	rc.Requesters = make(map[string]requesters.Requester)
-	for _, page := range Pages {
-		rc.Requesters[page.ID] = requesters.NewSocialNetworkRequester(page.Name, page.URL, nickname)
+	for _, network := range conf.Networks {
+		rc.Requesters[network.ID] = requesters.NewSocialNetworkRequester(network.Name, network.URL, nickname)
 	}
 	return rc
 }
