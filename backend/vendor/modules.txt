@@ -8,3 +8,6 @@ github.com/andybalholm/cascadia
 ## explicit; go 1.17
 golang.org/x/net/html
 golang.org/x/net/html/atom
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2

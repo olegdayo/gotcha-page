@@ -2,5 +2,5 @@ FROM golang:latest
 
 WORKDIR /app
 COPY . .
-RUN go build -o gotchaPage src/*.go
+RUN go build -o gotchaPage *.go
 CMD ["./gotchaPage"]
