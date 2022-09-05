@@ -2,7 +2,7 @@ package tests
 
 import (
 	"fmt"
-	"gotchaPage/src/requesters"
+	"gotchaPage/requesters"
 	"testing"
 )
 
