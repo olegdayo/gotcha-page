@@ -311,7 +311,7 @@ func TestGetInfo(t *testing.T) {
 		t.Run(fmt.Sprintf("Test№%d", index), func(t *testing.T) {
 			gotLink, gotName, err := testCase.requester.GetInfo()
 			if err == nil {
-				if gotLink != testCase.expectedLink || gotName != testCase.expectedName {
+				if gotLink != testCase.expectedLink {
 					t.Errorf("Expected: %s, %s; got: %s, %s\n", testCase.expectedLink, testCase.expectedName, gotLink, gotName)
 				}
 				return
