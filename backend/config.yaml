@@ -1,6 +1,6 @@
-assets-path: assets
-scripts-path: scripts
-port: 8080
+server:
+  url: localhost
+  port: 8080
 
 networks:
   - id: facebook

@@ -27,19 +27,19 @@ func runServer(port string) (err error) {
 	return err
 }
 
-// Here we start.
-func main() {
+func init() {
 	conf = new(Config)
 	err := conf.Init()
 	if err != nil {
 		panic(err)
 	}
+	log.Println(conf)
+	log.Println(*conf.Server)
+}
 
-	log.Println(conf.AssetsPath)
-	log.Println(conf.ScriptsPath)
-	log.Println(conf.Port)
-
-	err = runServer(fmt.Sprintf(":%d", conf.Port))
+// Here we start.
+func main() {
+	err := runServer(fmt.Sprintf(":%d", conf.Server.Port))
 	if err != nil {
 		panic(err)
 	}

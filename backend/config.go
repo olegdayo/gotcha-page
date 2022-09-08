@@ -12,11 +12,14 @@ type Network struct {
 	URL  string `json:"url" yaml:"url"`
 }
 
+type Server struct {
+	URL  string `yaml:"url"`
+	Port uint16 `yaml:"port"`
+}
+
 type Config struct {
-	AssetsPath  string     `yaml:"assets-path" json:"-"`
-	ScriptsPath string     `yaml:"scripts-path" json:"-"`
-	Port        int        `yaml:"port" json:"-"`
-	Networks    []*Network `yaml:"networks" json:"networks"`
+	Server   *Server    `yaml:"server" json:"-"`
+	Networks []*Network `yaml:"networks" json:"networks"`
 }
 
 func (c *Config) Init() error {
