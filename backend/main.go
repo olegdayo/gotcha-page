@@ -2,43 +2,28 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"log"
 	"net/http"
 )
 
 var conf *Config
 
-// Handler struct is a custom handler.
-type Handler struct {
-	http.Handler
-	Name string
-}
+func setRouter() *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
-func enableCORS(rw http.ResponseWriter) {
-	rw.Header().Set("Access-Control-Allow-Origin", "*")
-	rw.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-}
-
-// ServeHTTP is Handler's main function.
-func (hand *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	enableCORS(rw)
-	requests(rw, r)
+	r.Get("/", getNetworks)
+	r.Get("/{nickname}", getUsers)
+	return r
 }
 
 // Adds root, assets and starts the server.
 func runServer(port string) (err error) {
-	mux := http.NewServeMux()
-	var hand *Handler = &Handler{Name: "Handy"}
-
-	// Adding root.
-	mux.Handle("/", hand)
-	// Adding CSS files.
-	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(conf.AssetsPath))))
-	// Adding JS files
-	mux.Handle("/scripts/", http.StripPrefix("/scripts/", http.FileServer(http.Dir(conf.ScriptsPath))))
-
 	log.Println("Start")
-	err = http.ListenAndServe(port, mux)
+	r := setRouter()
+	err = http.ListenAndServe(port, r)
 	return err
 }
 

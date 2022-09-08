@@ -16,19 +16,21 @@ function App() {
             });
     }, []);
 
-    function changeAll() {
+    function changeAll(event) {
+        let selectAllCheckbox = checkboxes.find(x => x.id === event.target.name)
         setCheckboxes(checkboxes.map(
             (x) => {
                 return {
-                    ...x, value: !x.value
+                    ...x, value: !selectAllCheckbox.value
                 }
             }
         ))
     }
 
     function change(event) {
-        const checkbox = checkboxes.find(x => x.id === event.target.name)
+        let checkbox = checkboxes.find(x => x.id === event.target.name)
         console.log(checkbox)
+        console.log(event.target.name)
         checkbox.value = !checkbox.value
         setCheckboxes(checkboxes)
     }
@@ -64,7 +66,7 @@ function App() {
             <div className="checks">
                 <ul>
                     <li>
-                        <input onChange={changeAll} type="checkbox" name="all" id="all" />
+                        <input onChange={changeAll} type="checkbox" name="all" id="all" checked={"false"} />
                         <label form={"all"}>{"Select all"}</label>
                     </li>
                     {checkboxes.map(

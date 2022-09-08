@@ -42,6 +42,16 @@ func NewRequesterContainer(nickname string) (rc *RequesterContainer) {
 	return rc
 }
 
+// SetUsedLinks sets ticked checkboxes.
+func (rc *RequesterContainer) SetUsedLinks(clients ...string) {
+	for _, parser := range clients {
+		if _, ok := rc.Requesters[parser]; ok {
+			log.Println(parser)
+			rc.Requesters[parser].SetAvailability(true)
+		}
+	}
+}
+
 // Function getNumberOfAvailableRequesters gets number of selected requesters.
 func (rc *RequesterContainer) getNumberOfAvailableRequesters() (number int) {
 	number = 0
