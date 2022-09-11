@@ -40,7 +40,7 @@ func init() {
 	conf = new(config.Config)
 	err := conf.Init()
 	if err != nil {
-		panic(err)
+		log.Fatalf("Config error: %s\n", err.Error())
 	}
 	log.Println(conf)
 	log.Println(*conf.Server)
@@ -51,6 +51,6 @@ func main() {
 	s := NewServer(conf.Server.Port)
 	err := s.Start()
 	if err != nil {
-		panic(err)
+		log.Fatalf("Server running error: %s\n", err.Error())
 	}
 }

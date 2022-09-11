@@ -324,7 +324,7 @@ func TestGetInfo(t *testing.T) {
 				return
 			}
 
-			t.Fatalf("Unexpected error: %s", err)
+			t.Fatalf("Unexpected error: %s\n", err)
 		})
 	}
 }
