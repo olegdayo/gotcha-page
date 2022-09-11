@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"gopkg.in/yaml.v2"
@@ -23,7 +23,7 @@ type Config struct {
 }
 
 func (c *Config) Init() error {
-	bytes, err := ioutil.ReadFile("config.yaml")
+	bytes, err := ioutil.ReadFile("config/config.yaml")
 	if err != nil {
 		return err
 	}

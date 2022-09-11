@@ -4,11 +4,28 @@ import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"gotchaPage/config"
 	"log"
 	"net/http"
 )
 
-var conf *Config
+var conf *config.Config
+
+type Server struct {
+	http.Server
+}
+
+func NewServer(port uint16) (s *Server) {
+	s = new(Server)
+	s.Addr = fmt.Sprintf(":%d", port)
+	s.Handler = setRouter()
+	return
+}
+
+func (s *Server) Start() error {
+	log.Println("Starting the server")
+	return s.ListenAndServe()
+}
 
 func setRouter() *chi.Mux {
 	r := chi.NewRouter()
@@ -19,16 +36,8 @@ func setRouter() *chi.Mux {
 	return r
 }
 
-// Adds root, assets and starts the server.
-func runServer(port string) (err error) {
-	log.Println("Start")
-	r := setRouter()
-	err = http.ListenAndServe(port, r)
-	return err
-}
-
 func init() {
-	conf = new(Config)
+	conf = new(config.Config)
 	err := conf.Init()
 	if err != nil {
 		panic(err)
@@ -39,7 +48,8 @@ func init() {
 
 // Here we start.
 func main() {
-	err := runServer(fmt.Sprintf(":%d", conf.Server.Port))
+	s := NewServer(conf.Server.Port)
+	err := s.Start()
 	if err != nil {
 		panic(err)
 	}
