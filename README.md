@@ -1,4 +1,5 @@
 # GotchaPage project
+![Build](https://github.com/OFFLUCK/gotcha-page/actions/workflows/build.yml/badge.svg)
 ![Linux](https://github.com/OFFLUCK/gotcha-page/actions/workflows/linux.yml/badge.svg)
 ![MacOS](https://github.com/OFFLUCK/gotcha-page/actions/workflows/macos.yml/badge.svg)
 ![Windows](https://github.com/OFFLUCK/gotcha-page/actions/workflows/windows.yml/badge.svg)
