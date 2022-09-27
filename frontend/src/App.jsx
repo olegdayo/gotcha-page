@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 
 function App() {
@@ -35,15 +35,28 @@ function App() {
         setCheckboxes(checkboxes)
     }
 
-    function postRequest() {
-        axios.post("http://localhost:8080", {
-                nickname: nickname,
-                parsers: checkboxes.filter(x => x.value).map(
-                    x => x.id
-                )
-            })
+    function createRequestURL() {
+        let link = "http://localhost:8080/" + nickname + "?clients=["
+        checkboxes.map(
+            x => {
+                if (x.value) {
+                    link += x.id + " "
+                }
+            }
+        )
+        link = link.slice(0, -1) + "]"
+        return link
+    }
+
+    function usersRequest() {
+        axios.get(createRequestURL(), {
+            nickname: nickname,
+            parsers: checkboxes.filter(x => x.value).map(
+                x => x.id
+            )
+        })
             .then((resp) => {
-                setLinks(resp.data);
+                setLinks(resp.data.users)
                 console.log(resp.data)
                 console.log(links)
             })
@@ -58,15 +71,17 @@ function App() {
                 <label>
                     Nickname:
                 </label>
-                <input value={nickname} onChange={(event) => { setNickname(event.target.value) }} type="text" name="nickname"/>
-                <br />
-                <button onClick={postRequest}>Get pages!</button>
+                <input value={nickname} onChange={(event) => {
+                    setNickname(event.target.value)
+                }} type="text" name="nickname"/>
+                <br/>
+                <button onClick={usersRequest}>Get pages!</button>
             </div>
 
             <div className="checks">
                 <ul>
                     <li>
-                        <input onChange={changeAll} type="checkbox" name="all" id="all" checked={"false"} />
+                        <input onChange={changeAll} type="checkbox" name="all" id="all" checked={false}/>
                         <label form={"all"}>{"Select all"}</label>
                     </li>
                     {checkboxes.map(
@@ -81,19 +96,20 @@ function App() {
             <div className="links">
                 <ul>
                     {
-                    links.map(
-                        (x, k) => {
-                            console.log(x)
-                            if (x.available) {
-                                return  <li key={k}>
-                                            <a name={x.url} href={x.link}>{x.name}</a>
-                                        </li>
-                            }
-                            return  <li key={k}>
-                                        <a>{x.name}</a>
+                        links.map(
+                            (x, k) => {
+                                console.log(x)
+                                if (x.available) {
+                                    return <li key={k}>
+                                        <a name={x.url} href={x.link}>{x.name}</a>
                                     </li>
-                        }
-                    )}
+                                }
+                                return <li key={k}>
+                                    <a>{x.name}</a>
+                                </li>
+                            }
+                        )
+                    }
                 </ul>
             </div>
         </>

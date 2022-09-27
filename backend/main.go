@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"gotchaPage/config"
 	"log"
 	"net/http"
@@ -25,15 +23,6 @@ func NewServer(port uint16) (s *Server) {
 func (s *Server) Start() error {
 	log.Println("Starting the server")
 	return s.ListenAndServe()
-}
-
-func setRouter() *chi.Mux {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-
-	r.Get("/", getNetworks)
-	r.Get("/{nickname}", getUsers)
-	return r
 }
 
 func init() {

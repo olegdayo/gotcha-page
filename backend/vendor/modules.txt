@@ -8,6 +8,9 @@ github.com/andybalholm/cascadia
 ## explicit; go 1.14
 github.com/go-chi/chi/v5
 github.com/go-chi/chi/v5/middleware
+# github.com/go-chi/cors v1.2.1
+## explicit; go 1.14
+github.com/go-chi/cors
 # golang.org/x/net v0.0.0-20210916014120-12bc252f5db8
 ## explicit; go 1.17
 golang.org/x/net/html
