@@ -1,4 +1,12 @@
-*.DS_Store
-.idea/*
-.vscode/*
-pkg/*
+# System
+.DS_Store
+
+# IDE
+.fleet/
+.idea/
+.vscode/
+
+# Binaries
+*.o
+build/
+target/
