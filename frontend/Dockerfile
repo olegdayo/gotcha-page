@@ -9,6 +9,4 @@ RUN npm install react-scripts@3.4.1 -g
 
 COPY . .
 
-RUN npm run build
-RUN npm install -g serve --save
-CMD ["serve", "-s", "build"]
+CMD ["npm", "start"]
