@@ -8,6 +8,7 @@
 
 # Binaries
 *.o
+bin/
 build/
 target/
 
