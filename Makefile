@@ -5,4 +5,4 @@ run: build
 	sudo docker compose up --force-recreate --build -d
 
 check:
-	cd checkout && make precommit
+	cd checkout && make check
