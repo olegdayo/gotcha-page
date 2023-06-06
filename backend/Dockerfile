@@ -1,6 +1,6 @@
-FROM golang:latest
+FROM ubuntu:22.04
 
-WORKDIR /app
-COPY . .
-RUN go build -o gotchaPage *.go
-CMD ["./gotchaPage"]
+ADD ./bin/app /app
+ADD ./config.yaml /config.yaml
+
+CMD ["./app"]
