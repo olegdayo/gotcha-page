@@ -11,7 +11,3 @@
 bin/
 build/
 target/
-
-# Other
-go.sum
-go.work.sum

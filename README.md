@@ -1,6 +1,6 @@
 # GotchaPage project
 
-[ci]: https://github.com/offluck/gotcha-page/actions/workflows/ci.yaml/badge.svg
+[ci]: https://github.com/olegdayo/gotcha-page/actions/workflows/ci.yaml/badge.svg
 
 ![CI][ci]
 

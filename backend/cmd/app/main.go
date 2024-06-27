@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/olegdayo/gotcha-page/backend/internal/server"
-	"github.com/olegdayo/gotcha-page/backend/internal/sharedData"
+	"log"
 	"runtime"
 
-	"log"
+	"github.com/olegdayo/gotcha-page/backend/internal/server"
+	"github.com/olegdayo/gotcha-page/backend/internal/sharedData"
 )
 
 func init() {
