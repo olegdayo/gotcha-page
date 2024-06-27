@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"github.com/offluck/gotcha-page/backend/internal/requesters"
+	"github.com/olegdayo/gotcha-page/backend/internal/requesters"
 	"testing"
 )
 
@@ -29,23 +29,23 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 		{
 			name:     "GitHub",
 			mainURL:  "github.com",
-			nickname: "OFFLUCK",
+			nickname: "olegdayo",
 			selected: true,
 			expected: requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 		},
 		{
 			name:     "GitLab",
 			mainURL:  "gitlab.com",
-			nickname: "OFFLUCK",
+			nickname: "olegdayo",
 			selected: true,
 			expected: requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 		},
 	}
@@ -86,7 +86,7 @@ func TestGetName(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			"GitHub",
 		},
@@ -94,7 +94,7 @@ func TestGetName(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			"GitLab",
 		},
@@ -128,17 +128,17 @@ func TestGetNickname(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
-			"OFFLUCK",
+			"olegdayo",
 		},
 		{
 			requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
-			"OFFLUCK",
+			"olegdayo",
 		},
 	}
 
@@ -170,7 +170,7 @@ func TestIsAvailable(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			expected: true,
 		},
@@ -178,7 +178,7 @@ func TestIsAvailable(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			expected: true,
 		},
@@ -214,7 +214,7 @@ func TestSetAvailability(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			expected: true,
 		},
@@ -222,7 +222,7 @@ func TestSetAvailability(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
 			expected: true,
 		},
@@ -264,18 +264,18 @@ func TestGetInfo(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"GitHub",
 				"github.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
-			"https://github.com/OFFLUCK",
-			"OFFLUCK (Oleg) · GitHub",
+			"https://github.com/olegdayo",
+			"olegdayo (Oleg) · GitHub",
 		},
 		{
 			requesters.NewSocialNetworkRequester(
 				"GitLab",
 				"gitlab.com",
-				"OFFLUCK",
+				"olegdayo",
 			),
-			"https://gitlab.com/OFFLUCK",
+			"https://gitlab.com/olegdayo",
 			"Oleg · GitLab",
 		},
 		{

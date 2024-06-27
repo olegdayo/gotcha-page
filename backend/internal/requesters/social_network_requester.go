@@ -18,7 +18,7 @@ type SocialNetworkRequester struct {
 	// For github it will be "github.com".
 	mainURL string
 	// User's nickname.
-	// For example, "OFFLUCK".
+	// For example, "olegdayo".
 	nickname string
 	// Requester availability.
 	// If selected, it can be used to parse site.

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/offluck/gotcha-page/backend/internal/server"
-	"github.com/offluck/gotcha-page/backend/internal/sharedData"
+	"github.com/olegdayo/gotcha-page/backend/internal/server"
+	"github.com/olegdayo/gotcha-page/backend/internal/sharedData"
 	"runtime"
 
 	"log"

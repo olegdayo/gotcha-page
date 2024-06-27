@@ -2,7 +2,7 @@ package requesters
 
 import (
 	"fmt"
-	"github.com/offluck/gotcha-page/backend/internal/sharedData"
+	"github.com/olegdayo/gotcha-page/backend/internal/sharedData"
 	"log"
 	"sort"
 )

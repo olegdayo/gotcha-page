@@ -1,6 +1,6 @@
 package sharedData
 
-import "github.com/offluck/gotcha-page/backend/internal/config"
+import "github.com/olegdayo/gotcha-page/backend/internal/config"
 
 var (
 	conf config.Config

@@ -1,4 +1,4 @@
-module github.com/offluck/gotcha-page/backend
+module github.com/olegdayo/gotcha-page/backend
 
 go 1.20
 
