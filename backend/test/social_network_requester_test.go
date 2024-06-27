@@ -18,12 +18,12 @@ func TestNewSocialNetworkRequester(t *testing.T) {
 		{
 			name:     "VK",
 			mainURL:  "vk.com",
-			nickname: "olegsama",
+			nickname: "olegdayo",
 			selected: false,
 			expected: requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
-				"olegsama",
+				"olegdayo",
 			),
 		},
 		{
@@ -78,7 +78,7 @@ func TestGetName(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
-				"olegsama",
+				"olegdayo",
 			),
 			"VK",
 		},
@@ -120,7 +120,7 @@ func TestGetNickname(t *testing.T) {
 			requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
-				"olegsama",
+				"olegdayo",
 			),
 			"olegsama",
 		},
@@ -162,7 +162,7 @@ func TestIsAvailable(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
-				"olegsama",
+				"olegdayo",
 			),
 			expected: false,
 		},
@@ -206,7 +206,7 @@ func TestSetAvailability(t *testing.T) {
 			requester: requesters.NewSocialNetworkRequester(
 				"VK",
 				"vk.com",
-				"olegsama",
+				"olegdayo",
 			),
 			expected: false,
 		},
@@ -257,7 +257,7 @@ func TestGetInfo(t *testing.T) {
 				"vk.com",
 				"olegsama",
 			),
-			"https://vk.com/olegsama",
+			"https://vk.com/olegdayo",
 			"Oleg Sidorenkov | VK",
 		},
 		{
