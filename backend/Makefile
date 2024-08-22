@@ -29,17 +29,21 @@ lint: install-lint
 check: format build test lint
 	echo "OK"
 
+.PHONY: bindir
 bindir:
 	mkdir -p ${BINDIR}
 
+.PHONY: format
 format: install-smartimports
 	${SMARTIMPORTS} -exclude internal/mocks
 
-install-lint: bindir
+.PHONY: install-linter
+install-linter: bindir
 	test -f ${LINTBIN} || \
 		(GOBIN=${BINDIR} go install github.com/golangci/golangci-lint/cmd/golangci-lint@${LINTVER} && \
 		mv ${BINDIR}/golangci-lint ${LINTBIN})
 
+.PHONY: install-smartimports
 install-smartimports: bindir
 	test -f ${SMARTIMPORTS} || \
 		(GOBIN=${BINDIR} go install github.com/pav5000/smartimports/cmd/smartimports@latest && \
